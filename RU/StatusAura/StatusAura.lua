@@ -1,0 +1,367 @@
+---------------------------------------------------
+-- SAGM_Namespaces
+---------------------------------------------------
+StatAuras = {};
+StatAuras.Vars = {};
+StatAuras.Funcs = {};
+if StatAurasDatabase == nil then
+	StatAurasDatabase = {};
+	StatAurasDatabase.PlayersAuras = {};
+	StatAurasDatabase.NPCAuras = {};
+	StatAurasDatabase.AurasPool = {
+		[1] = {1, "|cff942727Очки Здоровья|r", "Показатель жизненной силы персонажа.", "Interface\\ICONS\\Spell_Shadow_LifeDrain", "Player_Name", true, ""},
+		[2] = {2, "|cff277E94Очки Энергии|r", "Показатель энергии персонажа.", "Interface\\ICONS\\INV_Elemental_Mote_Mana", "Player_Name", true, ""},
+		[3] = {3, "Очки Брони", "", "Interface\\ICONS\\INV_Shield_06", "Player_Name", true, ""},
+		[4] = {4, "Очки Барьера", "", "Interface\\ICONS\\Spell_Shadow_AntiMagicShell", "Player_Name", true, ""},
+		[5] = {5, "Очки Атаки", "", "Interface\\ICONS\\INV_Sword_04", "Player_Name", true, ""}
+	};
+end
+if StatAurasDatabase.AurasPool == nil or StatAurasDatabase.AurasPool == {} then
+	StatAurasDatabase.AurasPool = {
+		[1] = {1, "|cff942727Очки Здоровья|r", "Показатель жизненной силы персонажа.", "Interface\\ICONS\\Spell_Shadow_LifeDrain", "Player_Name", true, ""},
+		[2] = {2, "|cff277E94Очки Энергии|r", "Показатель энергии персонажа.", "Interface\\ICONS\\INV_Elemental_Mote_Mana", "Player_Name", true, ""},
+		[3] = {3, "Очки Брони", "", "Interface\\ICONS\\INV_Shield_06", "Player_Name", true, ""},
+		[4] = {4, "Очки Барьера", "", "Interface\\ICONS\\Spell_Shadow_AntiMagicShell", "Player_Name", true, ""},
+		[5] = {5, "Очки Атаки", "", "Interface\\ICONS\\INV_Sword_04", "Player_Name", true, ""}
+	};
+end
+---------------------------------------------------
+-- Slash-команды
+---------------------------------------------------
+SLASH_SADEF1 = "/sadef" or "/SADEF" or "/saDef";
+SlashCmdList.SADEF = function()
+	local menu = Def_SA_MainMenu;
+	menu:SetShown(not menu:IsShown());
+end
+SLASH_SADBCLEAR1 = "/sanpcdbclear" or "/SANPCDBCLEAR" or "/sanpdbclear" or "/SANPDBCLEAR" or "/saNPCDBClear";
+SlashCmdList.SADBCLEAR = function()
+	StatAurasDatabase.NPCAuras = {};
+	StatAuras.Funcs.TargetAurasUpdate();
+	print("|cffBA6EE6[StatusAura]|r |cffC61E1EБаза данных аур НПЦ успешно очищена!|r");
+end
+SLASH_SACUS1 = "/sacustom" or "/SACUSTOM";
+SlashCmdList.SACUS = function()
+	local menu = Cus_SA_MainMenu;
+	menu:SetShown(not menu:IsShown());
+end
+SLASH_SAHELP1 = "/sahelp" or "/SAHELP" or "/SAHelp" or "/SAhelp" or "/saHelp";
+SlashCmdList.SAHELP = function()
+	print("|cffBA6EE6[StatusAura]|r |cffFFB266Доступные команды:|r");
+	print("|cff9CE1E61.|r |cff9CE1E6/saDef|r |cffFFB266- открыть меню со стандартными аурами.|r");
+	print("|cff9CE1E62.|r |cff9CE1E6/saNPCDBClear|r |cffFFB266- очистить базу данных аур НПЦ.|r");
+	if StatAurasSyncModule then
+		print();
+		print("|cffBA6EE6[StatusAura |cff9CE1E6Sync_Module|r|cff6339C3]|r |cffFFB266Доступные команды:|r");
+		print("|cff9CE1E61.|r |cff9CE1E6/sagmToggle|r |cffFFB266- включить/отключить |cff9CE1E6режим ведущего|r|cffFFB266.|r");
+		print("|cff9CE1E62.|r |cff9CE1E6/saSetSender|r |cffFFB266- указать персонажа-цель как предпочтительный источник новых аур.|r");
+		print("|cff9CE1E63.|r |cff9CE1E6/saBlockSender|r |cff9CE1E6- |cffC61E1Eзаблокировать|cffFFB266 получение новых/обновление старых аур от персонажа-цели.|r");
+		print("|cff9CE1E64.|r |cff9CE1E6/saGetCustomSender|r |cffFFB266- выписать персонажа, который является предпочтительным для получения аур при входе в игру.|r");
+		print("|cff9CE1E65.|r |cff9CE1E6/saGetSender|r |cffFFB266- выписать персонажа, от которого вы получаете ауры при входе в игру.|r");
+		print("|cff9CE1E66.|r |cff9CE1E6/saGetBlockedSenders|r |cffFFB266- выписать персонажей, получение аур от которых вы |cffC61E1Eзаблокировали|cffFFB266.|r");
+	end
+end
+---------------------------------------------------
+-- Локальные функции
+---------------------------------------------------
+local function removebykey(table, key)
+    local element = table[key]
+    table[key] = nil
+    return element
+end
+
+local temp_aura_table = {}
+local function AuraTableCopy(table)
+	local table2 = {};
+	for i, n in pairs(table) do
+	  table2[i] = n
+	end
+	return table2
+end
+---------------------------------------------------
+-- Функции
+---------------------------------------------------
+StatAuras.Vars.CurAuraNum_Std = 0;
+StatAuras.Vars.CurAuraNum_Cus = 0;
+
+function StatAuras.Funcs.SwitchFrame(targetFrame)
+	if TargetFrameBuff1:IsVisible() then
+		targetFrame:Hide();
+	else
+		targetFrame:Show();
+	end
+end
+
+function StatAuras.Funcs.typeRadio(targetButton)
+	HP_Radio:SetChecked(false);
+	MP_Radio:SetChecked(false);
+	AR_Radio:SetChecked(false);
+	BAR_Radio:SetChecked(false);
+	ATK_Radio:SetChecked(false);
+	targetButton:SetChecked(true);
+end
+
+function StatAuras.Funcs.StdAuraType(n)
+	StatAuras.Vars.CurAuraNum_Std = n;
+end
+
+function StatAuras.Funcs.CusAuraType(n)
+	StatAuras.Vars.CurAuraNum_Cus = n;
+end
+
+function StatAuras.Funcs.DeleteAura(guid, auranum, db)
+	table.remove(db[guid], auranum);
+	if #db[guid] == 0 then
+		removebykey(db, guid)
+	end
+	return db;
+end
+
+function StatAuras.Funcs.SetAura(aura, guid, stacks, db)
+	local OwnerName = UnitName("player");
+	for db_guid, guid_auras in pairs(db) do
+		if guid == db_guid then
+			for i=1, #guid_auras do						-- || If target_guid exists, is aura
+			  if aura[1] == guid_auras[i][1] then
+				if tonumber(stacks) > 0 then
+					guid_auras[i][5] = OwnerName;		-- Смена "владельца" навешенной ауры
+					guid_auras[i][7] = stacks;			-- Стаки
+					return db;
+				else
+					return StatAuras.Funcs.DeleteAura(db_guid, i, db);
+				end
+			  end
+			end
+			if tonumber(stacks) > 0 then				-- || If target_guid exists, but no aura
+				temp_aura_table = AuraTableCopy(aura);
+				table.insert(db[db_guid], temp_aura_table);
+			  	local table_num = #db[db_guid];
+			  	db[db_guid][table_num][5] = OwnerName;	-- Смена "владельца" навешенной ауры
+			  	db[db_guid][table_num][7] = stacks;		-- Стаки
+			end
+			return db;
+		end
+	end
+	if tonumber(stacks) > 0 then						-- || If target_guid does not exist in DB
+		temp_aura_table = AuraTableCopy(aura);
+		db[guid] = {temp_aura_table};
+		local table_num = #db[guid];
+		db[guid][table_num][5] = OwnerName;				-- Смена "владельца" навешенной ауры
+		db[guid][table_num][7] = stacks;				-- Стаки
+	end
+	return db;
+end
+
+function StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, db, math_symbol)
+	local OwnerName = UnitName("player");
+	for db_guid, guid_auras in pairs(db) do
+		if guid == db_guid then
+			for i=1, #guid_auras do												-- || If target_guid exists, is aura
+			  if aura[1] == guid_auras[i][1] then
+				if (guid_auras[i][7] + stacks * math_symbol) > 0 then
+					guid_auras[i][5] = OwnerName;												-- Смена "владельца" навешенной ауры
+					guid_auras[i][7] = tostring((guid_auras[i][7] + stacks * math_symbol));		-- Стаки
+					return db;
+				else
+					return StatAuras.Funcs.DeleteAura(db_guid, i, db);
+				end
+			  end
+			end
+			if tonumber(stacks) * math_symbol > 0 then							-- || If target_guid exists, but no aura
+				temp_aura_table = AuraTableCopy(aura);
+				table.insert(db[db_guid], temp_aura_table);
+			  	local table_num = #guid_auras;
+			  	guid_auras[table_num][5] = OwnerName;							-- Смена "владельца" навешенной ауры
+			  	guid_auras[table_num][7] = tostring(stacks * math_symbol);		-- Стаки
+			end
+			return db;
+		end
+	end
+	if tonumber(stacks) * math_symbol > 0 then									-- || If target_guid does not exist in DB
+		temp_aura_table = AuraTableCopy(aura);
+		db[guid] = {temp_aura_table};
+		local table_num = #db[guid];
+		db[guid][table_num][5] = OwnerName;										-- Смена "владельца" навешенной ауры
+		db[guid][table_num][7] = tostring(stacks * math_symbol);				-- Стаки
+	end
+	return db;
+end
+
+function StatAuras.Funcs.RemoveAura(auranum, unit_type)
+	local auraID = StatAurasDatabase.AurasPool[auranum][1];
+	local guid;
+	if unit_type == "ply" then
+		guid = UnitGUID("player");
+	else
+		guid = UnitGUID("target");
+	end
+	if guid == nil then	
+		print("|cffBA6EE6[StatusAura]|r |cffC61E1EУ вас нет цели!|r");
+		return 1;
+	end
+	local aura_database;
+	if (GetPlayerInfoByGUID(guid)) then
+		aura_database = StatAurasDatabase.PlayersAuras;
+	else
+		aura_database = StatAurasDatabase.NPCAuras;
+	end
+	----------------------------------------------------------------------
+	for db_guid, guid_auras in pairs(aura_database) do
+		if guid == db_guid then
+			for i=1, #guid_auras do
+			  if auraID == guid_auras[i][1] then
+				aura_database = StatAuras.Funcs.DeleteAura(db_guid, i, aura_database);
+				if (GetPlayerInfoByGUID(guid)) then
+					StatAurasDatabase.PlayersAuras = aura_database;
+				else
+					StatAurasDatabase.NPCAuras = aura_database;
+				end
+				return 0;
+			  end
+			end
+			print("|cffBA6EE6[StatusAura]|r |cffC61E1EУ цели нет выбранной ауры!|r");
+			return 2;
+		end
+	end
+	print("|cffBA6EE6[StatusAura]|r |cffC61E1EУ цели нет активных аур!|r");
+	return 3;
+end
+
+function StatAuras.Funcs.ModifyAura(stacks, operation, auranum, unit_type)
+	local aura = StatAurasDatabase.AurasPool[auranum];
+	local guid;
+	if unit_type == "ply" then
+		guid = UnitGUID("player");
+	else
+		guid = UnitGUID("target");
+	end
+	if guid == nil then	
+		print("|cffBA6EE6[StatusAura]|r |cffC61E1EУ вас нет цели!|r");
+		return 1;
+	end
+	if operation == "set" then
+		if (GetPlayerInfoByGUID(guid)) then
+			StatAurasDatabase.PlayersAuras = StatAuras.Funcs.SetAura(aura, guid, stacks, StatAurasDatabase.PlayersAuras);
+		else
+			StatAurasDatabase.NPCAuras = StatAuras.Funcs.SetAura(aura, guid, stacks, StatAurasDatabase.NPCAuras);
+		end
+	elseif operation == "increase" then
+		if (GetPlayerInfoByGUID(guid)) then
+			StatAurasDatabase.PlayersAuras = StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, StatAurasDatabase.PlayersAuras, 1);
+		else
+			StatAurasDatabase.NPCAuras = StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, StatAurasDatabase.NPCAuras, 1);
+		end
+	elseif operation == "decrease" then
+		if (GetPlayerInfoByGUID(guid)) then
+			StatAurasDatabase.PlayersAuras = StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, StatAurasDatabase.PlayersAuras, -1);
+		else
+			StatAurasDatabase.NPCAuras = StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, StatAurasDatabase.NPCAuras, -1);
+		end
+	end
+	return 0;
+end
+
+function StatAuras.Funcs.AurasAnchorUpdate()
+	local anchor_yOffset = (32 - (SA_TargetAura1:GetHeight() + 6) * (TargetFrame.auraRows));
+	SA_TargetAurasAnchor:ClearAllPoints();
+	SA_TargetAurasAnchor:SetPoint("TOPLEFT", "TargetFrame", "BOTTOMLEFT", 5, anchor_yOffset);
+end
+
+function StatAuras.Funcs.TargetAurasUpdate()
+	if UnitGUID("target") == nil then	
+		SA_TargetAurasAnchor:Hide();
+		return 0;
+	end
+
+	local guid = UnitGUID("target");
+	local aura_database = {};
+	if (GetPlayerInfoByGUID(guid)) then
+		aura_database = StatAurasDatabase.PlayersAuras;
+	else
+		aura_database = StatAurasDatabase.NPCAuras;
+	end
+	
+	for db_guid, guid_auras in pairs(aura_database) do
+		if guid == db_guid then
+			local active_auras_num = #guid_auras;
+			local aura_containers = { SA_TargetAurasAnchor:GetChildren() };
+			for i=1, active_auras_num do												-- Показывает активные ауры.
+				local aura_element_containers = { aura_containers[i]:GetChildren() };
+				local aura_element = { aura_element_containers[1]:GetRegions() };		-- [1] стаки; [2] иконка
+				aura_element = aura_element[1];
+				if guid_auras[i][7] == "1" then
+					aura_element:SetText("");
+				else
+					aura_element:SetText(guid_auras[i][7]);
+				end
+				
+				aura_element = { aura_element_containers[2]:GetRegions() };
+				aura_element = aura_element[1];
+				aura_element:SetTexture(guid_auras[i][4]);
+			
+				aura_containers[i]:SetScript("OnEnter", function()						--	Установка скриптов для тултипов
+					GameTooltip:SetOwner(aura_containers[i], "ANCHOR_BOTTOMRIGHT", 15, -25)
+					GameTooltip:AddLine(guid_auras[i][2])
+					GameTooltip:AddLine(guid_auras[i][3], 1, 1, 1, true)
+					GameTooltip:AddDoubleLine("AuraID:", guid_auras[i][1], nil, nil, nil, 0.71, 1, 1)
+					GameTooltip:AddDoubleLine("Владелец:", guid_auras[i][5], nil, nil, nil, 0.71, 1, 1)
+					GameTooltip:Show()
+				end)
+				aura_containers[i]:SetScript("OnLeave", function()
+					GameTooltip:ClearLines()
+					GameTooltip:Hide()
+				end)
+				aura_containers[i]:Show();
+
+			end
+			for n = active_auras_num+1, #aura_containers do								-- Скрывает ненужные ауры.
+				aura_containers[n]:Hide();
+			end
+			SA_TargetAurasAnchor:Show();
+			return 0;
+		end
+	end
+	SA_TargetAurasAnchor:Hide();
+	return 0;
+end
+
+function StatAuras.Funcs.TargetAuraCrementByOne(auranum, button)	-- auranum - указатель на положение ауры в таблице аур цели
+	local guid = UnitGUID("target");								-- Если ничего не изменено и не сломано, то оно всегда
+	local db;														-- соответствует порядочному номеру иконки ауры.
+	if (GetPlayerInfoByGUID(guid)) then
+		db = StatAurasDatabase.PlayersAuras;
+	else
+		db = StatAurasDatabase.NPCAuras;
+	end
+	local auras_pointer;
+	for db_guid, guid_auras in pairs(db) do
+		if guid == db_guid then
+			auras_pointer = guid_auras;
+		end
+	end
+	local aura = auras_pointer[auranum];
+
+	if button == "LeftButton" then
+		db = StatAuras.Funcs.ChangeAuraStacks(aura, guid, 1, db, 1);
+	elseif button == "RightButton" then
+		db = StatAuras.Funcs.ChangeAuraStacks(aura, guid, 1, db, -1);
+	end
+	StatAuras.Funcs.TargetAurasUpdate();
+	return 0;
+end
+
+function StatAuras.Funcs.UI_Scaling()
+	local UI_scale = UIParent:GetEffectiveScale();
+	SA_TargetAurasAnchor:SetScale(UI_scale);
+	Def_SA_MainMenu:SetScale(UI_scale);
+	return 0;
+end
+
+function StatAuras.Funcs.AurasPoolSearch(auraID)
+	for aura_index, aura in pairs(StatAurasDatabase.AurasPool) do
+		if aura[1] == auraID then
+			return aura_index;
+		end
+	end
+	return false;
+end
+---------------------------------------------------

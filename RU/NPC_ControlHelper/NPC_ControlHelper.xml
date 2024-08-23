@@ -1,0 +1,952 @@
+<Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
+	<Button name="MainMenuTabButtonTemplate" motionScriptsWhileDisabled="true" virtual="true">
+        <Size>
+            <AbsDimension x="8" y="26"/>
+        </Size>
+        <Layers>
+        	<Layer level="BACKGROUND">
+        		<Texture name="$parentLeftDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+        			<Size>
+        				<AbsDimension x="16" y="28"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="TOPLEFT">
+        					<Offset>
+        						<AbsDimension x="0" y="0"/>
+        					</Offset>
+        				</Anchor>
+        			</Anchors>
+					<TexCoords left="0" right="0.15625" top="0" bottom="0.546875"/>
+        		</Texture>
+				<Texture name="$parentMiddleDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+        			<Size>
+        				<AbsDimension x="70" y="28"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeTo="$parentLeftDisabled" relativePoint="RIGHT"/>
+        			</Anchors>
+					<TexCoords left="0.15625" right="0.84375" top="0" bottom="0.546875"/>
+        		</Texture>
+				<Texture name="$parentRightDisabled" file="Interface\PaperDollInfoFrame\UI-Character-ActiveTab">
+        			<Size>
+        				<AbsDimension x="16" y="28"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeTo="$parentMiddleDisabled" relativePoint="RIGHT"/>
+        			</Anchors>
+					<TexCoords left="0.84375" right="1.0" top="0" bottom="0.546875"/>
+        		</Texture>
+				<Texture name="$parentLeft" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+        			<Size>
+        				<AbsDimension x="16" y="26"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="TOPLEFT" x="0" y="-1"/>
+        			</Anchors>
+					<TexCoords left="0" right="0.15625" top="0" bottom="1.0"/>
+        		</Texture>
+				<Texture name="$parentMiddle" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+        			<Size>
+        				<AbsDimension x="70" y="26"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT"/>
+					</Anchors>
+					<TexCoords left="0.15625" right="0.84375" top="0" bottom="1.0"/>
+        		</Texture>
+				<Texture name="$parentRight" file="Interface\PaperDollInfoFrame\UI-Character-InActiveTab">
+        			<Size>
+        				<AbsDimension x="16" y="26"/>
+        			</Size>
+        			<Anchors>
+        				<Anchor point="LEFT" relativeTo="$parentMiddle" relativePoint="RIGHT"/>
+        			</Anchors>
+					<TexCoords left="0.84375" right="1.0" top="0" bottom="1.0"/>
+        		</Texture>
+        	</Layer>
+        </Layers>
+		<Scripts>
+			<OnLoad>
+				self:SetFrameLevel(self:GetFrameLevel() + 4);
+				self:RegisterEvent("DISPLAY_SIZE_CHANGED");
+			</OnLoad>
+			<OnEvent>
+				if (self:IsVisible()) then
+					PanelTemplates_TabResize(self, 0, nil, 36, self:GetParent().maxTabWidth or 88);
+				end
+			</OnEvent>
+			<OnClick>
+				PanelTemplates_Tab_OnClick(self, CharacterFrame);
+				CharacterFrameTab_OnClick(self, button);
+			</OnClick>
+			<OnShow>
+				PanelTemplates_TabResize(self, 0, nil, 36, self:GetParent().maxTabWidth or 88);
+				CharacterFrame_TabBoundsCheck(self);
+			</OnShow>
+			<OnEnter>
+				local buttonText = _G[self:GetName().."Text"];
+				if (buttonText and buttonText:IsTruncated()) then
+					GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+					GameTooltip:SetText(buttonText:GetText());
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip_Hide();
+			</OnLeave>
+		</Scripts>
+		<ButtonText name="$parentText">
+			<Size>
+				<AbsDimension x="0" y="8"/>
+			</Size>
+			<Anchors>
+				<Anchor point="CENTER">
+					<Offset>
+						<AbsDimension x="0" y="2"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</ButtonText>
+		<NormalFont style="GameFontNormalSmall"/>
+		<HighlightFont style="GameFontHighlightSmall"/>
+		<DisabledFont style="GameFontHighlightSmall"/>
+		<HighlightTexture name="$parentHighlightTexture" file="Interface\PaperDollInfoFrame\UI-Character-Tab-RealHighlight" alphaMode="ADD">
+			<Anchors>
+				<Anchor point="TOPLEFT">
+					<Offset>
+						<AbsDimension x="3" y="5"/>
+					</Offset>
+				</Anchor>
+				<Anchor point="BOTTOMRIGHT">
+					<Offset>
+						<AbsDimension x="-3" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</HighlightTexture>
+    </Button>
+	<Frame name="NPC_ControlHelper_MainMenu" hidden="false" movable="true" resizable="true" clampedToScreen="true">
+		<Size x="383" y="220" />
+		<ResizeBounds>
+      		<minResize x="287" y="192"/>
+      		<maxResize x="383" y="220"/>
+  		</ResizeBounds>
+		<Anchors>
+			<Anchor x="268" y="-100" point="TOP" />
+		</Anchors>
+		<Backdrop bgFile="Interface\ChatFrame\ChatFrameBackground" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<BackgroundInsets left="3" right="3" top="4" bottom="4" />
+			<TileSize val="16" />
+			<EdgeSize val="16" />
+			<Color a="0.35" />
+		</Backdrop>
+		<Frames>
+			<Button name="CloseButton" inherits="Closer_Theme_Temp">
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-5" y="-4" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						NPC_ControlHelper_MainMenu:Hide()
+					</OnClick>
+				</Scripts>
+                <NormalTexture file="Interface\BUTTONS\UI-GroupLoot-Pass-Up"/>
+                <PushedTexture file="Interface\BUTTONS\UI-GROUPLOOT-PASS-DOWN"/>
+                <HighlightTexture alphaMode="ADD" file="Interface\Buttons\UI-GROUPLOOT-PASS-HIGHLIGHT"/>
+			</Button>
+			<Frame name="NPC_ControlHelper_Page1">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="MainMenu_Title" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="NPC ControlHelper" indented="true" outline="NORMAL">
+							<Size x="210" y="72" />
+							<Anchors>
+								<Anchor point="TOP">
+									<Offset>
+										<AbsDimension y="-8" />
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<FontHeight val="24" />
+							<Color r="0.878" g="0.878" b="0.878" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox name="MainPage_NPC_GUIDBox" inherits="InputBoxTemplate" autoFocus="false" historyLines="3">
+						<Size x="128" y="41" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="22" y="-73" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<FontString name="$parentHelpString" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="Название/GUID" indented="true" outline="NORMAL">
+									<Size x="128" y="20" />
+									<Anchors>
+										<Anchor point="CENTER"/>
+									</Anchors>
+									<FontHeight val="12" />
+									<Color r="0.478" g="0.478" b="0.478" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnTextChanged>
+								NPC_ControlHelper.Funcs.NPC_GUIDBox_OnTextChanged(self)
+							</OnTextChanged>
+						</Scripts>
+					</EditBox>
+					<Button name="MainTab_SearchBtn" inherits="GameMenuButtonTemplate" text="Поиск">
+						<Size x="128" y="26" />
+						<Anchors>
+							<Anchor point="TOPRIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="-81" />
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT" relativeTo="MainPage_NPC_GUIDBox" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="51"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.NPC_Search(MainPage_NPC_GUIDBox:GetText())
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="MainTab_PositionSecureBtn" inherits="GameMenuButtonTemplate" text="Закрепить позицию">
+						<Size x="134" y="26" />
+						<Anchors>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="TOP" relativeTo="MainPage_NPC_GUIDBox" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.NPC_SecurePos()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="MainTab_NPCDelBtn" inherits="GameMenuButtonTemplate" text="Удалить">
+						<Size x="128" y="26" />
+						<Anchors>
+							<Anchor point="TOPRIGHT">
+								<Offset>
+									<AbsDimension x="-16" y="-115" />
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT" relativeTo="MainTab_PositionSecureBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="51"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.NPC_Delete(MainPage_NPC_GUIDBox:GetText())
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="MainTab_NPCInfo" inherits="GameMenuButtonTemplate" text="Информация">
+						<Size x="128" y="26" />
+						<Anchors>
+							<Anchor point="BOTTOM">
+								<Offset>
+									<AbsDimension y="15"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-22"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.NPC_Info()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="MainTab_EpsiLocMarker" inherits="GameMenuButtonTemplate" text="Изучить Location Marker">
+						<Size x="128" y="26" />
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="MainTab_NPCInfo" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-16"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.LearnEpsiLocMarker()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+			<Frame name="NPC_ControlHelper_Page2" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="Page2_Title" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="Формации" indented="true" outline="NORMAL">
+							<Size x="210" y="72" />
+							<Anchors>
+								<Anchor point="TOP"/>
+							</Anchors>
+							<FontHeight val="24" />
+							<Color r="0.878" g="0.878" b="0.878" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<EditBox name="Page2_NPC_GUIDBox" inherits="InputBoxTemplate" autoFocus="false" historyLines="3">
+						<Size x="192" y="41" />
+						<Anchors>
+							<Anchor point="TOPRIGHT">
+								<Offset>
+									<AbsDimension x="-22" y="-49" />
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<FontString name="$parentHelpString" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="GUID лидера/(пустое)" indented="true" outline="NORMAL">
+									<Size x="192" y="20" />
+									<Anchors>
+										<Anchor point="CENTER"/>
+									</Anchors>
+									<FontHeight val="12" />
+									<Color r="0.478" g="0.478" b="0.478" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnTextChanged>
+								NPC_ControlHelper.Funcs.NPC_GUIDBox_OnTextChanged(self)
+							</OnTextChanged>
+						</Scripts>
+					</EditBox>
+					<Button name="Page2_LeadGUIDBtn" inherits="GameMenuButtonTemplate" text="GUID">
+						<Size x="26" y="26" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="16" y="-56"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativeTo="Page2_NPC_GUIDBox" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="-14" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.FormLead_GetGUID()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page2_FormThereBtn" inherits="GameMenuButtonTemplate" text="Добавить (поз. NPC)">
+						<Size x="130" y="26" />
+						<Anchors>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16" y="-4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Form_ThereAdd()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page2_FormHereBtn" inherits="GameMenuButtonTemplate" text="Добавить (поз. PLY)">
+						<Size x="134" y="26" />
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page2_FormThereBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Form_HereAdd()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page2_FormRemoveBtn" inherits="GameMenuButtonTemplate" text="Убрать из формации">
+						<Size x="134" y="26"/>
+						<Anchors>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16" y="-31"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Form_Remove()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<CheckButton name="Page2_RefreshTogBtn" inherits="UICheckButtonTemplate" text="Refresh_Toggle">
+						<Anchors>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-17" y="-31"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="Page2_TogBtnDesc" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="Вкл/Выкл обновление" indented="true" outline="NORMAL">
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="Page2_FormRemoveBtn" relativePoint="RIGHT">
+											<Offset>
+												<AbsDimension x="2"/>
+											</Offset>
+										</Anchor>
+										<Anchor point="RIGHT">
+											<Offset>
+												<AbsDimension x="-24"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+									<FontHeight val="12" />
+									<Color r="0.878" g="0.878" b="0.878" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<!-- <OnLoad>
+								NPC_ControlHelper.Funcs.Form_RefToggleOnLoad(self)
+							</OnLoad> -->
+							<OnClick>
+								NPC_ControlHelper.Funcs.Form_RefToggleOnClick(self)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Button name="Page2_FormInfoBtn" inherits="GameMenuButtonTemplate" text="Информация">
+						<Size x="128" y="26" />
+						<Anchors>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16" y="-70"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Form_Info()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page2_FormShowBtn" inherits="GameMenuButtonTemplate" text="Отобразить">
+						<Size x="134" y="26" />
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page2_FormInfoBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Form_Show()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+			<Frame name="NPC_ControlHelper_Page3" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="Page3_Title" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="WIP" indented="true" outline="NORMAL">
+							<Size x="210" y="72" />
+							<Anchors>
+								<Anchor point="TOP"/>
+							</Anchors>
+							<FontHeight val="24" />
+							<Color r="0.878" g="0.878" b="0.878" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+				</Frames>
+			</Frame>
+			<Frame name="NPC_ControlHelper_Page4" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="Page4_Title" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="WIP" indented="true" outline="NORMAL">
+							<Size x="210" y="72" />
+							<Anchors>
+								<Anchor point="TOP"/>
+							</Anchors>
+							<FontHeight val="24" />
+							<Color r="0.878" g="0.878" b="0.878" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+				</Frames>
+			</Frame>
+			<Frame name="NPC_ControlHelper_Page5" hidden="true">
+				<Anchors>
+					<Anchor point="TOPLEFT"/>
+					<Anchor point="BOTTOMRIGHT"/>
+				</Anchors>
+				<Layers>
+					<Layer level="OVERLAY">
+						<FontString name="Page5_Title" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="Движение" indented="true" outline="NORMAL">
+							<Size x="210" y="72" />
+							<Anchors>
+								<Anchor point="TOP"/>
+							</Anchors>
+							<FontHeight val="24" />
+							<Color r="0.878" g="0.878" b="0.878" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Frames>
+					<Button name="Page5_WalkHereBtn" inherits="GameMenuButtonTemplate" text="ШАГ ко мне">
+						<Size x="130" y="24" />
+						<Anchors>
+							<Anchor point="TOP">
+								<Offset>
+									<AbsDimension y="-54"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_RunNWalk("walk", "here")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_RunHereBtn" inherits="GameMenuButtonTemplate" text="БЕГ ко мне">
+						<Size x="132" y="26" />
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page5_WalkHereBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_RunNWalk("run", "here")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_WalkThereBtn" inherits="GameMenuButtonTemplate" text="ШАГ к позиции">
+						<Size x="132" y="26" />
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Page5_WalkHereBtn" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension y="-1"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_RunNWalk("walk", "there")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_RunThereBtn" inherits="GameMenuButtonTemplate" text="БЕГ к позиции">
+						<Size x="132" y="26" />
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page5_WalkThereBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_RunNWalk("run", "there")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_StopThereBtn" inherits="GameMenuButtonTemplate" text="Остановить NPC">
+						<Size x="134" y="26"/>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Page5_WalkThereBtn" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension y="-1"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.NPC_SecurePos()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<CheckButton name="Page5_FormationTogBtn" inherits="UICheckButtonTemplate" text="Formation_Toggle">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Page5_RunThereBtn" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension y="3"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-17"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="OVERLAY">
+								<FontString name="Page5_TogBtnDesc" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="Управление формацией" indented="true" outline="NORMAL">
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="Page5_StopThereBtn" relativePoint="RIGHT">
+											<Offset>
+												<AbsDimension x="2"/>
+											</Offset>
+										</Anchor>
+										<Anchor point="RIGHT">
+											<Offset>
+												<AbsDimension x="-24"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+									<FontHeight val="12" />
+									<Color r="0.878" g="0.878" b="0.878" />
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_FormToggleOnClick(self)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+					<Button name="Page5_PossessBtn" inherits="GameMenuButtonTemplate" text="Вселиться в NPC">
+						<Size x="134" y="26"/>
+						<Anchors>
+							<Anchor point="TOP">
+								<Offset>
+									<AbsDimension y="-140"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_Possessment(false)
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_UnPossessBtn" inherits="GameMenuButtonTemplate" text="Покинуть тело NPC">
+						<Size x="132" y="26" />
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page5_PossessBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="4"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_Possessment(true)
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_TurnHereBtn" inherits="GameMenuButtonTemplate" text="Поворот: He">
+						<Size x="82" y="22"/>
+						<Anchors>
+							<Anchor point="LEFT">
+								<Offset>
+									<AbsDimension x="16" y="-80"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="-50"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_Turn("here")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_TurnThereBtn" inherits="GameMenuButtonTemplate" text="Поворот: Th">
+						<Size x="82" y="22"/>
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page5_TurnHereBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="2"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-118"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_Turn("there")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="Page5_TurnLikemeBtn" inherits="GameMenuButtonTemplate" text="Поворот: Me">
+						<Size x="82" y="22"/>
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Page5_TurnThereBtn" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="2"/>
+								</Offset>
+							</Anchor>
+							<Anchor point="RIGHT">
+								<Offset>
+									<AbsDimension x="-20"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								NPC_ControlHelper.Funcs.Movement_Turn("likeme")
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+			</Frame>
+			<Frame name="MainMenu_TabAnchorBox" hidden="false" resizable="true">
+				<Size x="1" y="1" />
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOM"/>
+				</Anchors>
+			</Frame>
+			<Button name="ResizeBtn">
+				<Size x="16" y="16" />
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-2" y="2" />
+						</Offset>
+					</Anchor>
+				</Anchors>
+                <NormalTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Up"/>
+                <PushedTexture file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Down"/>
+                <HighlightTexture alphaMode="ADD" file="Interface\ChatFrame\UI-ChatIM-SizeGrabber-Highlight"/>
+			</Button>
+			<Button name="$parentTab3" inherits="MainMenuTabButtonTemplate" id="3" text="КОММ">
+               	<Anchors>
+               	    <Anchor point="CENTER" relativeto="MainMenu_TabAnchorBox">
+                       	<Offset>
+                        	<AbsDimension y="-9"/>
+                		</Offset>
+                   	</Anchor>
+               	</Anchors>
+               	<Scripts>
+               	    <OnClick>
+                    	NPC_ControlHelper.Funcs.TabBtnHandler(self)
+               	    </OnClick>
+               	</Scripts>
+           	</Button>
+			<Button name="$parentTab4" inherits="MainMenuTabButtonTemplate" id="4" text="АНИМ">
+               	<Anchors>
+               	    <Anchor point="LEFT" relativeTo="$parentTab3" relativePoint="RIGHT">
+               	        <Offset>
+               	            <AbsDimension x="-16" y="0"/>
+               	        </Offset>
+               	    </Anchor>
+               	</Anchors>
+               	<Scripts>
+               	    <OnClick>
+                    	NPC_ControlHelper.Funcs.TabBtnHandler(self)
+               	    </OnClick>
+               	</Scripts>
+           	</Button>
+			<Button name="$parentTab5" inherits="MainMenuTabButtonTemplate" id="5" text="ДВИЖ">
+               	<Anchors>
+               	    <Anchor point="LEFT" relativeTo="$parentTab4" relativePoint="RIGHT">
+               	        <Offset>
+               	            <AbsDimension x="-16" y="0"/>
+               	        </Offset>
+               	    </Anchor>
+               	</Anchors>
+               	<Scripts>
+               	    <OnClick>
+                    	NPC_ControlHelper.Funcs.TabBtnHandler(self)
+               	    </OnClick>
+               	</Scripts>
+           	</Button>
+           	<Button name="$parentTab2" inherits="MainMenuTabButtonTemplate" id="2" text="ФОРМ">
+               	<Anchors>
+               	    <Anchor point="RIGHT" relativeTo="$parentTab3" relativePoint="LEFT">
+               	        <Offset>
+               	            <AbsDimension x="16" y="0"/>
+               	        </Offset>
+               	    </Anchor>
+               	</Anchors>
+               	<Scripts>
+               	    <OnClick>
+                    	NPC_ControlHelper.Funcs.TabBtnHandler(self)
+               	    </OnClick>
+               	</Scripts>
+           	</Button>
+			<Button name="$parentTab1" inherits="MainMenuTabButtonTemplate" id="1" text="ГЛАВ">
+               	<Anchors>
+					<Anchor point="RIGHT" relativeTo="$parentTab2" relativePoint="LEFT">
+               	        <Offset>
+               	            <AbsDimension x="16" y="0"/>
+               	        </Offset>
+               	    </Anchor>
+               	</Anchors>
+               	<Scripts>
+                   	<OnClick>
+                    	NPC_ControlHelper.Funcs.TabBtnHandler(self)
+                   	</OnClick>
+               	</Scripts>
+        	</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+            	self.elapsed = 0
+            	PanelTemplates_SetNumTabs(self, 5)
+            	PanelTemplates_SetTab(self, 1)
+				self:RegisterEvent("UI_SCALE_CHANGED")
+				NPC_ControlHelper.Funcs.UI_Scaling()
+           	</OnLoad>
+			<OnMouseDown>
+				if button == "LeftButton" then
+				self:StartMoving()
+				end
+			</OnMouseDown>
+			<OnMouseUp>
+				self:StopMovingOrSizing()
+			</OnMouseUp>
+			<OnEvent>
+				if ( event == "UI_SCALE_CHANGED" ) then
+				StatAuras.Funcs.UI_Scaling()
+				end
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>

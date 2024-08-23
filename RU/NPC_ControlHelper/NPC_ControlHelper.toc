@@ -1,0 +1,10 @@
+## Title: |cffFFB266NPC_ControlHelper|r
+## Version: 0.6
+## Author: SomeBody
+## Interface: 90005
+## Notes: Призван облегчить манипуляции с NPC для ведущих на игровом сервере Epsilon.|n|n|cff990099Created by roleplayers for roleplayers.|r
+## SavedVariables: NPC_ControlHelper_Config
+
+NPC_ControlHelper.xml
+
+NPC_ControlHelper.lua

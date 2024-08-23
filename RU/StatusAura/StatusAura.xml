@@ -1,0 +1,238 @@
+<Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="Def_SA_MainMenu" inherits="BasicFrameTemplateWithInset" movable="true" enableMouse="true">
+		<Size>
+			<AbsDimension x="253" y="280" />
+		</Size>
+		<Anchors>
+			<Anchor x="321" y="87" point="CENTER" />
+		</Anchors>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="MainMenu_Title" inherits="GameFontNormalCenter" font="Fonts\FRIZQT___CYR.TTF" text="Standart Auras">
+					<Size x="210" y="36" />
+					<Anchors>
+						<Anchor y="84" point="CENTER" />
+					</Anchors>
+					<FontHeight val="24" />
+					<Color r="0.878" g="0.878" b="0.878" />
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="MainMenu_AuraValue" inherits="InputBoxTemplate" autoFocus="false">
+				<Size x="128" y="41" />
+				<Anchors>
+					<Anchor x="22" y="-73" point="TOPLEFT" />
+				</Anchors>
+			</EditBox>
+			<Button name="MainMenu_SetButton" inherits="GameMenuButtonTemplate" text="Установить">
+				<Size x="134" y="33" />
+				<Anchors>
+					<Anchor x="-43" y="6" point="CENTER" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.ModifyAura(MainMenu_AuraValue:GetText(), "set", StatAuras.Vars.CurAuraNum_Std, "trg")
+						StatAuras.Funcs.TargetAurasUpdate()
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("trg")
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="MainMenu_IncrementButton" inherits="GameMenuButtonTemplate" text="Добавить">
+				<Size x="134" y="33" />
+				<Anchors>
+					<Anchor x="-43" y="-33" point="CENTER" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.ModifyAura(MainMenu_AuraValue:GetText(), "increase", StatAuras.Vars.CurAuraNum_Std, "trg")
+						StatAuras.Funcs.TargetAurasUpdate()
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("trg")
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="MainMenu_DecrementButton" inherits="GameMenuButtonTemplate" text="Уменьшить">
+				<Size x="134" y="33" />
+				<Anchors>
+					<Anchor x="-43" y="-72" point="CENTER" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.ModifyAura(MainMenu_AuraValue:GetText(), "decrease", StatAuras.Vars.CurAuraNum_Std, "trg")
+						StatAuras.Funcs.TargetAurasUpdate()
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("trg")
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="MainMenu_RemoveButton" inherits="GameMenuButtonTemplate" text="Убрать">
+				<Size x="134" y="33" />
+				<Anchors>
+					<Anchor x="-43" y="-111" point="CENTER" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.RemoveAura(StatAuras.Vars.CurAuraNum_Std, "trg")
+						StatAuras.Funcs.TargetAurasUpdate()
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("trg")
+						end
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="HP_Aura_desc" inherits="UIPanelBorderedButtonTemplate" text="Button2">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor x="89" y="44" point="CENTER" />
+				</Anchors>
+				<Frames>
+					<CheckButton name="HP_Radio" inherits="UICheckButtonTemplate" text="CheckButton1">
+						<Anchors>
+							<Anchor x="-38" point="CENTER" />
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								StatAuras.Funcs.StdAuraType(1)
+								StatAuras.Funcs.typeRadio(self)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+				</Frames>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.StdAuraType(1)
+						StatAuras.Funcs.typeRadio(HP_Radio)
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\ICONS\Spell_Shadow_LifeDrain" />
+				<PushedTexture file="Interface\ICONS\Spell_Shadow_LifeDrain" />
+			</Button>
+			<Button name="MP_Aura_desc" inherits="UIPanelBorderedButtonTemplate" text="Button2">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor x="89" y="5" point="CENTER" />
+				</Anchors>
+				<Frames>
+					<CheckButton name="MP_Radio" inherits="UICheckButtonTemplate" text="CheckButton2">
+						<Anchors>
+							<Anchor x="-38" point="CENTER" />
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								StatAuras.Funcs.StdAuraType(2)
+								StatAuras.Funcs.typeRadio(self)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+				</Frames>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.StdAuraType(2)
+						StatAuras.Funcs.typeRadio(MP_Radio)
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\ICONS\INV_Elemental_Mote_Mana" />
+				<PushedTexture file="Interface\ICONS\INV_Elemental_Mote_Mana" />
+			</Button>
+			<Button name="AR_Aura_desc" inherits="UIPanelBorderedButtonTemplate" text="Button2">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor x="89" y="-34" point="CENTER" />
+				</Anchors>
+				<Frames>
+					<CheckButton name="AR_Radio" inherits="UICheckButtonTemplate" text="CheckButton3">
+						<Anchors>
+							<Anchor x="-38" point="CENTER" />
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								StatAuras.Funcs.StdAuraType(3)
+								StatAuras.Funcs.typeRadio(self)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+				</Frames>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.StdAuraType(3)
+						StatAuras.Funcs.typeRadio(AR_Radio)
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\ICONS\INV_Shield_06" />
+				<PushedTexture file="Interface\ICONS\INV_Shield_06" />
+			</Button>
+			<Button name="BAR_Aura_desc" inherits="UIPanelBorderedButtonTemplate" text="Button2">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor x="89" y="-73" point="CENTER" />
+				</Anchors>
+				<Frames>
+					<CheckButton name="BAR_Radio" inherits="UICheckButtonTemplate" text="CheckButton4">
+						<Anchors>
+							<Anchor x="-38" point="CENTER" />
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								StatAuras.Funcs.StdAuraType(4)
+								StatAuras.Funcs.typeRadio(self)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+				</Frames>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.StdAuraType(4)
+						StatAuras.Funcs.typeRadio(BAR_Radio)
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\ICONS\Spell_Shadow_AntiMagicShell" />
+				<PushedTexture file="Interface\ICONS\Spell_Shadow_AntiMagicShell" />
+			</Button>
+			<Button name="ATK_Aura_desc" inherits="UIPanelBorderedButtonTemplate" text="Button2">
+				<Size x="32" y="32" />
+				<Anchors>
+					<Anchor x="89" y="-111" point="CENTER" />
+				</Anchors>
+				<Frames>
+					<CheckButton name="ATK_Radio" inherits="UICheckButtonTemplate" text="CheckButton4">
+						<Anchors>
+							<Anchor x="-38" point="CENTER" />
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								StatAuras.Funcs.StdAuraType(5)
+								StatAuras.Funcs.typeRadio(ATK_Radio)
+							</OnClick>
+						</Scripts>
+					</CheckButton>
+				</Frames>
+				<Scripts>
+					<OnClick>
+						StatAuras.Funcs.StdAuraType(5)
+						StatAuras.Funcs.typeRadio(ATK_Radio)
+					</OnClick>
+				</Scripts>
+				<NormalTexture file="Interface\ICONS\INV_Sword_04" />
+				<PushedTexture file="Interface\ICONS\INV_Sword_04" />
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:Hide()
+			</OnLoad>
+			<OnMouseDown>
+				if button == "LeftButton" then
+				self:StartMoving()
+				end
+			</OnMouseDown>
+			<OnMouseUp>
+				self:StopMovingOrSizing()
+			</OnMouseUp>
+		</Scripts>
+	</Frame>
+</Ui>
