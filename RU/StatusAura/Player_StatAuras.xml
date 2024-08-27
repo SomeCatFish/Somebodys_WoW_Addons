@@ -1,0 +1,786 @@
+<Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
+	<Frame name="SA_PlayerAurasAnchor">
+		<Size x="1" y="1" />
+		<Anchors>
+			<Anchor point="TOPRIGHT" relativeTo="BuffFrame" relativePoint="TOPRIGHT">
+				<!-- <Offset x="-205" y="-13" /> -->
+			</Anchor>
+		</Anchors>
+		<Frames>
+			<Frame name="SA_PlayerAura1" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="SA_PlayerAurasAnchor" />
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura1Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura1" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura1Stacks" font="Fonts\ARIALN.TTF" text="" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura1Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura1" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura1" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura1Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura1" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura1" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(1, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura2" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura1" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura2Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura2" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura2Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura2Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura2" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura2" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura2Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura2" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura2" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(2, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura3" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura2" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura3Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura3" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura3Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura3Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura3" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura3" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura3Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura3" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura3" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(3, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura4" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura3" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura3Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura4" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura4Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura4Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura4" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura4" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura4Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura4" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura4" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(4, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura5" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura4" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura5Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura5" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura5Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura5Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura5" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura5" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura5Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura5" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura5" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(5, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura6" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura5" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura6Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura6" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura6Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura6Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura6" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura6" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura6Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura6" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura6" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(6, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura7" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura6" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura7Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura7" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura7Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura7Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura7" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura7" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura7Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura7" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura7" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(7, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura8" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura7" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura8Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura8" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura8Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura8Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura8" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura8" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura8Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura8" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura8" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(8, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura9" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="SA_PlayerAura1" relativePoint="BOTTOMRIGHT">
+						<Offset y="-15" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura9Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura9" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura9Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura9Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura9" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura9" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura9Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura9" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura9" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(9, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura10" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura9" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura10Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura10" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura10Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura10Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura10" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura10" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura10Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura10" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura10" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(10, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura11" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura10" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura11Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura11" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura11Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura11Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura11" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura11" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura11Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura11" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura11" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(11, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura12" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura11" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura12Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura12" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura12Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura12Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura12" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura12" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura12Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura12" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura12" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(12, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura13" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura12" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura13Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura13" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura13Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura13Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura13" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura13" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura13Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura13" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura13" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(13, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura14" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura13" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura14Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura14" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura14Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura14Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura14" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura14" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura14Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura14" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura14" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(14, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+			<Frame name="SA_PlayerAura15" hidden="true">
+				<Size x="30" y="30" />
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="SA_PlayerAura14" relativePoint="LEFT">
+						<Offset x="-5" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="SA_PlayerAura15Stacks">
+						<Size x="14" y="14" />
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura15" relativePoint="BOTTOMRIGHT">
+								<Offset x="-2" y="2" />
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer>
+								<FontString name="SA_PlayerAura15Stacks" font="Fonts\ARIALN.TTF" text="3" outline="NORMAL" justifyH="RIGHT">
+									<FontHeight val="14" />
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<Frame name="SA_PlayerAura15Icon">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura15" relativePoint="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura15" relativePoint="BOTTOMRIGHT" />
+						</Anchors>
+						<Layers>
+							<Layer>
+								<Texture name="SA_PlayerAura15Icon" file="Interface\ICONS\Trade_Engineering.blp">
+									<Size x="30" y="30" />
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="SA_PlayerAura15" relativePoint="TOPLEFT" />
+										<Anchor point="BOTTOMRIGHT" relativeTo="SA_PlayerAura15" relativePoint="BOTTOMRIGHT" />
+									</Anchors>
+								</Texture>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnMouseDown>
+						StatAuras.Funcs.DisplayAuraCrementByOne(15, button, "player")
+						if StatAurasSyncModule then
+						StatAuras.Funcs.SendAurasOnSet("ply")
+						end
+					</OnMouseDown>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterEvent("PLAYER_ENTERING_WORLD")
+				self:RegisterEvent("UI_SCALE_CHANGED")
+				StatAuras.Funcs.UI_Scaling()
+				self:Show()
+			</OnLoad>
+			<OnShow>
+				self:RegisterEvent("UNIT_AURA")
+			</OnShow>
+			<OnHide>
+				self:UnregisterEvent("UNIT_AURA")
+			</OnHide>
+			<OnEvent>
+				if ( event == "PLAYER_ENTERING_WORLD" ) then
+				StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
+				StatAuras.Funcs.PlayerAurasAnchorUpdate()
+				end
+				if ( event == "UNIT_AURA" ) then
+				StatAuras.Funcs.PlayerAurasAnchorUpdate()
+				end
+				if ( event == "UI_SCALE_CHANGED" ) then
+				StatAuras.Funcs.UI_Scaling()
+				end
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>

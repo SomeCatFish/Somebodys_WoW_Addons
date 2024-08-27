@@ -36,7 +36,7 @@ end
 SLASH_SADBCLEAR1 = "/sanpcdbclear" or "/SANPCDBCLEAR" or "/sanpdbclear" or "/SANPDBCLEAR" or "/saNPCDBClear";
 SlashCmdList.SADBCLEAR = function()
 	StatAurasDatabase.NPCAuras = {};
-	StatAuras.Funcs.TargetAurasUpdate();
+	StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor)
 	print("|cffBA6EE6[StatusAura]|r |cffC61E1EБаза данных аур НПЦ успешно очищена!|r");
 end
 SLASH_SACUS1 = "/sacustom" or "/SACUSTOM";
@@ -260,30 +260,54 @@ function StatAuras.Funcs.ModifyAura(stacks, operation, auranum, unit_type)
 	return 0;
 end
 
-function StatAuras.Funcs.AurasAnchorUpdate()
+function StatAuras.Funcs.TargetAurasAnchorUpdate()
 	local anchor_yOffset = (32 - (SA_TargetAura1:GetHeight() + 6) * (TargetFrame.auraRows));
 	SA_TargetAurasAnchor:ClearAllPoints();
 	SA_TargetAurasAnchor:SetPoint("TOPLEFT", "TargetFrame", "BOTTOMLEFT", 5, anchor_yOffset);
 end
 
-function StatAuras.Funcs.TargetAurasUpdate()
-	if UnitGUID("target") == nil then	
-		SA_TargetAurasAnchor:Hide();
+function StatAuras.Funcs.PlayerAurasAnchorUpdate()
+	local PlayerAurasAmount = 0;
+	AuraUtil.ForEachAura("player", "HELPFUL", nil, function()
+		PlayerAurasAmount = PlayerAurasAmount + 1;
+	end);
+
+	local PlayerAurasRows = (PlayerAurasAmount - mod(PlayerAurasAmount, 8)) / 8;
+	if (math.fmod(PlayerAurasAmount, 8) > 0) then
+		PlayerAurasRows = PlayerAurasRows + 1;
+	end
+	local anchor_yOffset = (0 - (SA_PlayerAura1:GetHeight() + 15) * (PlayerAurasRows));
+	SA_PlayerAurasAnchor:ClearAllPoints();
+	SA_PlayerAurasAnchor:SetPoint("TOPRIGHT", "BuffFrame", "TOPRIGHT", 0, anchor_yOffset);
+end
+
+function StatAuras.Funcs.DisplayAurasUpdate(unitID, AurasAnchor)
+	if UnitGUID(unitID) == nil then
+		AurasAnchor:Hide();
 		return 0;
 	end
 
-	local guid = UnitGUID("target");
+	local guid = UnitGUID(unitID);
 	local aura_database = {};
 	if (GetPlayerInfoByGUID(guid)) then
 		aura_database = StatAurasDatabase.PlayersAuras;
 	else
 		aura_database = StatAurasDatabase.NPCAuras;
 	end
-	
+
+	local tooltip_anchor = "ANCHOR_BOTTOMLEFT";											-- Tooltip anchoring
+	local tooltip_xoff = 0;
+	local tooltip_yoff = 0;
+	if unitID == "target" then
+		tooltip_anchor = "ANCHOR_BOTTOMRIGHT";
+		tooltip_xoff = 15;
+		tooltip_yoff = -25;
+	end
+
 	for db_guid, guid_auras in pairs(aura_database) do
 		if guid == db_guid then
 			local active_auras_num = #guid_auras;
-			local aura_containers = { SA_TargetAurasAnchor:GetChildren() };
+			local aura_containers = { AurasAnchor:GetChildren() };
 			for i=1, active_auras_num do												-- Показывает активные ауры.
 				local aura_element_containers = { aura_containers[i]:GetChildren() };
 				local aura_element = { aura_element_containers[1]:GetRegions() };		-- [1] стаки; [2] иконка
@@ -297,9 +321,9 @@ function StatAuras.Funcs.TargetAurasUpdate()
 				aura_element = { aura_element_containers[2]:GetRegions() };
 				aura_element = aura_element[1];
 				aura_element:SetTexture(guid_auras[i][4]);
-			
+				
 				aura_containers[i]:SetScript("OnEnter", function()						--	Установка скриптов для тултипов
-					GameTooltip:SetOwner(aura_containers[i], "ANCHOR_BOTTOMRIGHT", 15, -25)
+					GameTooltip:SetOwner(aura_containers[i], tooltip_anchor, tooltip_xoff, tooltip_yoff)
 					GameTooltip:AddLine(guid_auras[i][2])
 					GameTooltip:AddLine(guid_auras[i][3], 1, 1, 1, true)
 					GameTooltip:AddDoubleLine("AuraID:", guid_auras[i][1], nil, nil, nil, 0.71, 1, 1)
@@ -316,17 +340,17 @@ function StatAuras.Funcs.TargetAurasUpdate()
 			for n = active_auras_num+1, #aura_containers do								-- Скрывает ненужные ауры.
 				aura_containers[n]:Hide();
 			end
-			SA_TargetAurasAnchor:Show();
+			AurasAnchor:Show();
 			return 0;
 		end
 	end
-	SA_TargetAurasAnchor:Hide();
+	AurasAnchor:Hide();
 	return 0;
 end
 
-function StatAuras.Funcs.TargetAuraCrementByOne(auranum, button)	-- auranum - указатель на положение ауры в таблице аур цели
-	local guid = UnitGUID("target");								-- Если ничего не изменено и не сломано, то оно всегда
-	local db;														-- соответствует порядочному номеру иконки ауры.
+function StatAuras.Funcs.DisplayAuraCrementByOne(auranum, button, unitID)	-- auranum - указатель на положение ауры в таблице аур цели
+	local guid = UnitGUID(unitID);											-- Если ничего не изменено и не сломано, то оно всегда
+	local db;																-- соответствует порядочному номеру иконки ауры.
 	if (GetPlayerInfoByGUID(guid)) then
 		db = StatAurasDatabase.PlayersAuras;
 	else
@@ -345,13 +369,22 @@ function StatAuras.Funcs.TargetAuraCrementByOne(auranum, button)	-- auranum - у
 	elseif button == "RightButton" then
 		db = StatAuras.Funcs.ChangeAuraStacks(aura, guid, 1, db, -1);
 	end
-	StatAuras.Funcs.TargetAurasUpdate();
+
+	if UnitGUID("target") == UnitGUID("player") then
+		StatAuras.Funcs.DisplayAurasUpdate(unitID, SA_PlayerAurasAnchor);
+		StatAuras.Funcs.DisplayAurasUpdate(unitID, SA_TargetAurasAnchor);
+	elseif unitID == "player" then
+		StatAuras.Funcs.DisplayAurasUpdate(unitID, SA_PlayerAurasAnchor);
+	else
+		StatAuras.Funcs.DisplayAurasUpdate(unitID, SA_TargetAurasAnchor);
+	end
 	return 0;
 end
 
 function StatAuras.Funcs.UI_Scaling()
 	local UI_scale = UIParent:GetEffectiveScale();
 	SA_TargetAurasAnchor:SetScale(UI_scale);
+	SA_PlayerAurasAnchor:SetScale(UI_scale);
 	Def_SA_MainMenu:SetScale(UI_scale);
 	return 0;
 end

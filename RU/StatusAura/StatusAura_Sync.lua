@@ -236,7 +236,8 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 		SoR = LibParse:JSONDecode(SoR);
 
 		StatAurasDatabase = SoR;
-		StatAuras.Funcs.TargetAurasUpdate();
+		StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor);
+		StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor);
 	--=====================================================================================--
 	elseif ( prefix == "SA_SendOnSetQ" ) and ( sender ~= UnitName("PLAYER") ) then
 		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do	--> Проверка, не заблокирован ли отправляющий
@@ -257,7 +258,8 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 			StatAurasDatabase.NPCAuras[guid] = SoR[3];
 		end
 
-		StatAuras.Funcs.TargetAurasUpdate();
+		StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor);
+		StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor);
 	end
 end
 ---------------------------------------------------

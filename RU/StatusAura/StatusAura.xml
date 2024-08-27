@@ -33,7 +33,8 @@
 				<Scripts>
 					<OnClick>
 						StatAuras.Funcs.ModifyAura(MainMenu_AuraValue:GetText(), "set", StatAuras.Vars.CurAuraNum_Std, "trg")
-						StatAuras.Funcs.TargetAurasUpdate()
+						StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor)
+						StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -48,7 +49,8 @@
 				<Scripts>
 					<OnClick>
 						StatAuras.Funcs.ModifyAura(MainMenu_AuraValue:GetText(), "increase", StatAuras.Vars.CurAuraNum_Std, "trg")
-						StatAuras.Funcs.TargetAurasUpdate()
+						StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor)
+						StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -63,7 +65,8 @@
 				<Scripts>
 					<OnClick>
 						StatAuras.Funcs.ModifyAura(MainMenu_AuraValue:GetText(), "decrease", StatAuras.Vars.CurAuraNum_Std, "trg")
-						StatAuras.Funcs.TargetAurasUpdate()
+						StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor)
+						StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -78,7 +81,8 @@
 				<Scripts>
 					<OnClick>
 						StatAuras.Funcs.RemoveAura(StatAuras.Vars.CurAuraNum_Std, "trg")
-						StatAuras.Funcs.TargetAurasUpdate()
+						StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor)
+						StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
