@@ -758,6 +758,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad>
+				self:RegisterEvent("UPDATE_INSTANCE_INFO")
 				self:RegisterEvent("PLAYER_ENTERING_WORLD")
 				self:RegisterEvent("UI_SCALE_CHANGED")
 				StatAuras.Funcs.UI_Scaling()
@@ -770,9 +771,13 @@
 				self:UnregisterEvent("UNIT_AURA")
 			</OnHide>
 			<OnEvent>
-				if ( event == "PLAYER_ENTERING_WORLD" ) then
-				StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
+				if ( event == "UPDATE_INSTANCE_INFO" ) then
 				StatAuras.Funcs.PlayerAurasAnchorUpdate()
+				StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
+				end
+				if ( event == "PLAYER_ENTERING_WORLD" ) then
+				StatAuras.Funcs.PlayerAurasAnchorUpdate()
+				StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor)
 				end
 				if ( event == "UNIT_AURA" ) then
 				StatAuras.Funcs.PlayerAurasAnchorUpdate()
