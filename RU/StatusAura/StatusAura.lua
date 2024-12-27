@@ -53,11 +53,18 @@ SlashCmdList.SAHELP = function()
 		print();
 		print("|cffBA6EE6[StatusAura |cff9CE1E6Sync_Module|r|cff6339C3]|r |cffFFB266Доступные команды:|r");
 		print("|cff9CE1E61.|r |cff9CE1E6/sagmToggle|r |cffFFB266- включить/отключить |cff9CE1E6режим ведущего|r|cffFFB266.|r");
-		print("|cff9CE1E62.|r |cff9CE1E6/saSetSender|r |cffFFB266- указать персонажа-цель как предпочтительный источник новых аур.|r");
-		print("|cff9CE1E63.|r |cff9CE1E6/saBlockSender|r |cff9CE1E6- |cffC61E1Eзаблокировать|cffFFB266 получение новых/обновление старых аур от персонажа-цели.|r");
-		print("|cff9CE1E64.|r |cff9CE1E6/saGetCustomSender|r |cffFFB266- выписать персонажа, который является предпочтительным для получения аур при входе в игру.|r");
-		print("|cff9CE1E65.|r |cff9CE1E6/saGetSender|r |cffFFB266- выписать персонажа, от которого вы получаете ауры при входе в игру.|r");
-		print("|cff9CE1E66.|r |cff9CE1E6/saGetBlockedSenders|r |cffFFB266- выписать персонажей, получение аур от которых вы |cffC61E1Eзаблокировали|cffFFB266.|r");
+		print("|cff9CE1E62.|r |cff9CE1E6/saModeSwitch|r |cffFFB266- переключить режим получения аур на |cff606060чёрный|r/|cffFFFFFFбелый|r список.|r");
+		print("|cff9CE1E63.|r |cff9CE1E6/saAWLtoggle|r |cffFFB266- включить/отключить |cff9CE1E6автоматическое добавление|r избранного отправителя аур, лидера рейда и его помощников в |cffFFFFFFбелый|r список|cffFFB266.|r");
+		print("|cff9CE1E64.|r |cff9CE1E6/saSetSender|r |cffFFB266- указать персонажа-цель как предпочтительный источник новых аур.|r");
+		print("|cff9CE1E65.|r |cff9CE1E6/saBlockSender|r |cff9CE1E6- |cffC61E1Eзаблокировать|cffFFB266 получение новых/обновление старых аур от персонажа-цели.|r");
+		print("|cff9CE1E66.|r |cff9CE1E6/saWhitelistSender|r |cff9CE1E6- |cff1EC724разрешить|cffFFB266 получение новых/обновление старых аур от персонажа-цели.|r");
+		print("|cff9CE1E67.|r |cff9CE1E6/saGetSender|r |cffFFB266- выписать персонажа, от которого вы получаете ауры при входе в игру.|r");
+		print("|cff9CE1E68.|r |cff9CE1E6/saGetPriority|r |cffFFB266- выписать список персонажей-отправителей аур в порядке приоритета.|r");
+		print("|cff9CE1E69.|r |cff9CE1E6/saGetCustomSender|r |cffFFB266- выписать персонажа, который является предпочтительным для получения аур при входе в игру.|r");
+		print("|cff9CE1E610.|r |cff9CE1E6/saGetBlockedSenders|r |cffFFB266- выписать персонажей, получение аур от которых вы |cffC61E1Eзаблокировали|r.|r");
+		print("|cff9CE1E611.|r |cff9CE1E6/saGetWhitelistedSenders|r |cffFFB266- выписать персонажей, получение аур от которых вы |cff1EC724разрешили|r.|r");
+		print("|cff9CE1E612.|r |cff9CE1E6/saClearBlacklist|r |cffFFB266- очистить |cff606060чёрный список|r отправителей.|r");
+		print("|cff9CE1E613.|r |cff9CE1E6/saClearWhitelist|r |cffFFB266- очистить |cffFFFFFFбелый список|r отправителей.|r");
 	end
 end
 ---------------------------------------------------
@@ -69,7 +76,6 @@ local function removebykey(table, key)
     return element
 end
 
-local temp_aura_table = {}
 local function AuraTableCopy(table)
 	local table2 = {};
 	for i, n in pairs(table) do
@@ -116,13 +122,39 @@ function StatAuras.Funcs.DeleteAura(guid, auranum, db)
 	return db;
 end
 
+function StatAuras.Funcs.UnstackableCheck(auraTable, stacks, operation)
+	if auraTable[6] then							-- || If aura IS, in fact, stackable
+		return stacks;
+	end
+
+	if (operation == "set" or operation == "change_nil") and stacks > 0 then
+		stacks = 1;
+		auraTable[7] = stacks;
+		return stacks;
+	end
+
+	if operation == "change" and stacks >= 0 then
+		stacks = 0;
+		auraTable[7] = stacks;
+		return stacks;
+	end
+
+	return stacks;									-- || Just for safety, in case stacks value will SOMEHOW be negative
+end
+
 function StatAuras.Funcs.SetAura(aura, guid, stacks, db)
 	local OwnerName = UnitName("player");
+	local temp_aura_table = {};
+	temp_aura_table = AuraTableCopy(aura);
+	stacks = tonumber(stacks);
+	temp_aura_table[7] = stacks;
+	stacks = StatAuras.Funcs.UnstackableCheck(temp_aura_table, stacks, "set");
+
 	for db_guid, guid_auras in pairs(db) do
 		if guid == db_guid then
 			for i=1, #guid_auras do						-- || If target_guid exists, is aura
-			  if aura[1] == guid_auras[i][1] then
-				if tonumber(stacks) > 0 then
+			  if temp_aura_table[1] == guid_auras[i][1] then
+				if stacks > 0 then
 					guid_auras[i][5] = OwnerName;		-- Смена "владельца" навешенной ауры
 					guid_auras[i][7] = stacks;			-- Стаки
 					return db;
@@ -131,57 +163,57 @@ function StatAuras.Funcs.SetAura(aura, guid, stacks, db)
 				end
 			  end
 			end
-			if tonumber(stacks) > 0 then				-- || If target_guid exists, but no aura
-				temp_aura_table = AuraTableCopy(aura);
+			if stacks > 0 then							-- || If target_guid exists, but no aura
 				table.insert(db[db_guid], temp_aura_table);
 			  	local table_num = #db[db_guid];
 			  	db[db_guid][table_num][5] = OwnerName;	-- Смена "владельца" навешенной ауры
-			  	db[db_guid][table_num][7] = stacks;		-- Стаки
 			end
 			return db;
 		end
 	end
-	if tonumber(stacks) > 0 then						-- || If target_guid does not exist in DB
-		temp_aura_table = AuraTableCopy(aura);
+	if stacks > 0 then									-- || If target_guid does not exist in DB
 		db[guid] = {temp_aura_table};
 		local table_num = #db[guid];
 		db[guid][table_num][5] = OwnerName;				-- Смена "владельца" навешенной ауры
-		db[guid][table_num][7] = stacks;				-- Стаки
 	end
 	return db;
 end
 
 function StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, db, math_symbol)
 	local OwnerName = UnitName("player");
+	local temp_aura_table = {};
+	stacks = tonumber(stacks) * math_symbol;
+	temp_aura_table = AuraTableCopy(aura);
+	temp_aura_table[7] = stacks;
+
 	for db_guid, guid_auras in pairs(db) do
 		if guid == db_guid then
 			for i=1, #guid_auras do												-- || If target_guid exists, is aura
-			  if aura[1] == guid_auras[i][1] then
-				if (guid_auras[i][7] + stacks * math_symbol) > 0 then
-					guid_auras[i][5] = OwnerName;												-- Смена "владельца" навешенной ауры
-					guid_auras[i][7] = tostring((guid_auras[i][7] + stacks * math_symbol));		-- Стаки
+			  if temp_aura_table[1] == guid_auras[i][1] then
+				if (guid_auras[i][7] + stacks) > 0 then
+					stacks = StatAuras.Funcs.UnstackableCheck(temp_aura_table, stacks, "change");
+					guid_auras[i][5] = OwnerName;								-- Смена "владельца" навешенной ауры
+					guid_auras[i][7] = (guid_auras[i][7] + stacks);				-- Стаки
 					return db;
 				else
 					return StatAuras.Funcs.DeleteAura(db_guid, i, db);
 				end
 			  end
 			end
-			if tonumber(stacks) * math_symbol > 0 then							-- || If target_guid exists, but no aura
-				temp_aura_table = AuraTableCopy(aura);
+			if stacks > 0 then													-- || If target_guid exists, but no aura
+				StatAuras.Funcs.UnstackableCheck(temp_aura_table, stacks, "change_nil");
 				table.insert(db[db_guid], temp_aura_table);
 			  	local table_num = #guid_auras;
 			  	guid_auras[table_num][5] = OwnerName;							-- Смена "владельца" навешенной ауры
-			  	guid_auras[table_num][7] = tostring(stacks * math_symbol);		-- Стаки
 			end
 			return db;
 		end
 	end
-	if tonumber(stacks) * math_symbol > 0 then									-- || If target_guid does not exist in DB
-		temp_aura_table = AuraTableCopy(aura);
+	if stacks > 0 then															-- || If target_guid does not exist in DB
+		StatAuras.Funcs.UnstackableCheck(temp_aura_table, stacks, "change_nil");
 		db[guid] = {temp_aura_table};
 		local table_num = #db[guid];
 		db[guid][table_num][5] = OwnerName;										-- Смена "владельца" навешенной ауры
-		db[guid][table_num][7] = tostring(stacks * math_symbol);				-- Стаки
 	end
 	return db;
 end
@@ -312,10 +344,10 @@ function StatAuras.Funcs.DisplayAurasUpdate(unitID, AurasAnchor)
 				local aura_element_containers = { aura_containers[i]:GetChildren() };
 				local aura_element = { aura_element_containers[1]:GetRegions() };		-- [1] стаки; [2] иконка
 				aura_element = aura_element[1];
-				if guid_auras[i][7] == "1" then
+				if guid_auras[i][7] == 1 then
 					aura_element:SetText("");
 				else
-					aura_element:SetText(guid_auras[i][7]);
+					aura_element:SetText(tostring(guid_auras[i][7]));
 				end
 				
 				aura_element = { aura_element_containers[2]:GetRegions() };

@@ -1,5 +1,5 @@
 <Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
-	<Frame name="Def_SA_MainMenu" inherits="BasicFrameTemplateWithInset" movable="true" enableMouse="true">
+	<Frame name="Def_SA_MainMenu" inherits="BasicFrameTemplateWithInset" movable="true" enableMouse="true" parent="UIParent">
 		<Size>
 			<AbsDimension x="253" y="280" />
 		</Size>

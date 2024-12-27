@@ -17,23 +17,54 @@ end
 ---------------------------------------------------
 local channel, channelID, channelName, activeSender, curMembersNumber
 local inGroup = false;
-local Auras_senders = {};
+local status_aura_prefix = "|cffBA6EE6[StatusAura]|r";
 
 if StatAurasSyncModule == nil then
 	StatAurasSyncModule = {};
 	StatAurasSyncModule.customSender = nil;
 	StatAurasSyncModule.isGM = false;
+	StatAurasSyncModule.auraSenders = {};
+	StatAurasSyncModule.whitelistMode = true;
 	StatAurasSyncModule.blockedSenders = {};
+	StatAurasSyncModule.whitelistedSenders = {};
+	StatAurasSyncModule.autoWhitelist = true;
 end
 ---------------------------------------------------
 -- Локальные функции
 ---------------------------------------------------
+local function AutoWhitelistSender(PlayerToAdd)
+	if not StatAurasSyncModule.whitelistMode or not StatAurasSyncModule.autoWhitelist then
+		return;
+	end
+	--	---	В 1.6 знаменить проверку на [[ not setContains(PlayerToAdd) ]]	---
+	local isWhiteListed = false;
+
+	for _, name in ipairs(StatAurasSyncModule.whitelistedSenders) do
+		if name == PlayerToAdd then 
+			isWhiteListed = true;
+			break;
+		end
+	end
+	--	^^^	В 1.6 знаменить проверку на [[ not setContains(PlayerToAdd) ]]	^^^
+	if not isWhiteListed then
+		table.insert(StatAurasSyncModule.whitelistedSenders, PlayerToAdd);
+	end
+end
+
+local function AutoWhitelistPriorities()
+	if StatAurasSyncModule.autoWhitelist then
+		for _, name in ipairs(StatAurasSyncModule.auraSenders) do
+			AutoWhitelistSender(name);
+		end
+	end
+end
+
 local function AurasSenderSet()
 	local PlyIsLeader = UnitIsGroupLeader("PLAYER");
 
-	for i=1, #Auras_senders do
-		if UnitIsConnected(Auras_senders[i]) or #Auras_senders == 1 then
-			activeSender = Auras_senders[i];
+	for i=1, #StatAurasSyncModule.auraSenders do
+		if UnitIsConnected(StatAurasSyncModule.auraSenders[i]) or #StatAurasSyncModule.auraSenders == 1 then
+			activeSender = StatAurasSyncModule.auraSenders[i];
 			return 0;
 		end
 	end
@@ -42,7 +73,7 @@ local function AurasSenderSet()
 		return 0;
 	end
 	if not PlyIsLeader then
-		print("|cffBA6EE6[StatusAura]|r |cffC61E1EВ сети нет источника новых аур! Для того, чтобы включить автообновление аур, введите команду|r |cff6339C3/sasetsender|r");
+		print(status_aura_prefix, "|cffC61E1EВ сети нет источника новых аур! Для того, чтобы включить автообновление аур, введите команду|r |cff6339C3/sasetsender|r");
 		return 1;
 	end
 end
@@ -50,21 +81,21 @@ end
 local function AurasSenderSearch()
 	local numMembers = GetNumGroupMembers();
 	local PlyIsLeader = UnitIsGroupLeader("PLAYER");
-	Auras_senders = {};
+	StatAurasSyncModule.auraSenders = {};
 
 	if numMembers == 0 then
 		inGroup = false;
 		if StatAurasSyncModule.customSender ~= nil then
-			Auras_senders[1] = StatAurasSyncModule.customSender;
+			StatAurasSyncModule.auraSenders[1] = StatAurasSyncModule.customSender;
 			AurasSenderSet();
 			return 0;
 		end
-		print("|cffBA6EE6[StatusAura]|r |cffC61E1EВы не состоите в группе/рейде! Для того, чтобы включить автообновление аур, введите команду|r |cff6339C3/sasetsender|r");
+		print(status_aura_prefix, "|cffC61E1EВы не состоите в группе/рейде! Для того, чтобы включить автообновление аур, введите команду|r |cff6339C3/sasetsender|r");
 		return 1;
 	end
 	if PlyIsLeader then
 		if StatAurasSyncModule.customSender ~= nil then
-			Auras_senders[1] = StatAurasSyncModule.customSender;
+			StatAurasSyncModule.auraSenders[1] = StatAurasSyncModule.customSender;
 		end
 		inGroup = true;
 	end
@@ -72,16 +103,73 @@ local function AurasSenderSearch()
 	for i=1, numMembers do
 		local name, rank = GetRaidRosterInfo(i);
 		if rank == 2 and not PlyIsLeader then
-			table.insert(Auras_senders, 1, name);
+			table.insert(StatAurasSyncModule.auraSenders, 1, name);
+			AutoWhitelistSender(name);
 			inGroup = true;
 		elseif rank == 1 then
-			table.insert(Auras_senders, name);
+			table.insert(StatAurasSyncModule.auraSenders, name);
+			AutoWhitelistSender(name);
 		end
 	end
 	if StatAurasSyncModule.customSender and not PlyIsLeader then
-		table.insert(Auras_senders, 2, StatAurasSyncModule.customSender);
+		table.insert(StatAurasSyncModule.auraSenders, 2, StatAurasSyncModule.customSender);
 	end
 	AurasSenderSet();
+end
+
+local function ListPlayerAdd(listTable, PlayerToAdd)
+	local remove_msg;
+	local add_msg;
+	if listTable == StatAurasSyncModule.blockedSenders then
+		remove_msg = status_aura_prefix .. " Вы вернули персонажу|cffC61E1E " .. PlayerToAdd .. "|r возможность отправлять вам ауры.";
+		add_msg = status_aura_prefix .. " Вы успешно заблокировали получение аур от персонажа|cffC61E1E " .. PlayerToAdd .. "|r";
+	else
+		remove_msg = status_aura_prefix .. " Вы убрали персонажа|cffC61E1E " .. PlayerToAdd .. "|r из белого списка.";
+		add_msg = status_aura_prefix .. " Вы успешно добавили персонажа|cffC61E1E " .. PlayerToAdd .. "|r в белый список.";
+	end
+
+	for index, name in ipairs(listTable) do
+		if PlayerToAdd == name then
+			table.remove(listTable, index);
+			print(remove_msg);
+			return 0;
+		end
+	end
+
+	table.insert(listTable, PlayerToAdd);
+	print(add_msg);
+end
+
+local function ListPlayersGet(listTable)
+	local empty_msg;
+	local notempty_msg;
+	if listTable == StatAurasSyncModule.blockedSenders then
+		empty_msg = status_aura_prefix .. " Ваш список заблокированных отправителей пуст. |cffC61E1EДобавьте в него кого-нибудь! :)|r";
+		notempty_msg = status_aura_prefix .. " |cff9CE1E6Список заблокированных вами отправителей:|r";
+	else
+		empty_msg = status_aura_prefix .. " Ваш белый список отправителей пуст. |cff1EC724Добавьте в него кого-нибудь! :)|r";
+		notempty_msg = status_aura_prefix .. " |cff9CE1E6Белый список отправителей:|r";
+	end
+
+	if #listTable == 0 then
+		print(empty_msg);
+		return 0;
+	end
+
+	print(notempty_msg);
+	for index, name in ipairs(listTable) do
+		print(status_aura_prefix, "|cff9CE1E6—|r|cffC61E1E", name, "|r");
+	end
+end
+
+local function ListClear(listTable)
+	if listTable == StatAurasSyncModule.blockedSenders then
+		StatAurasSyncModule.blockedSenders = {};
+		print(status_aura_prefix, "|cffC61E1EВы успешно очистили |cff606060чёрный список|r отправителей!|r");
+	else
+		StatAurasSyncModule.whitelistedSenders = {};
+		print(status_aura_prefix, "|cffC61E1EВы успешно очистили |cffFFFFFFбелый список|r отправителей!|r");
+	end
 end
 ---------------------------------------------------
 -- Slash-команды
@@ -89,90 +177,134 @@ end
 SLASH_SAGMTog1 = "/SAGMToggle" or "/sagmtoggle" or "/SAGMTOGGLE" or "/sagmToggle";
 SlashCmdList.SAGMTog = function()
 	if StatAurasSyncModule.isGM then
-		StatAurasSyncModule.isGM = not StatAurasSyncModule.isGM;
-		print("|cffBA6EE6[StatusAura]|r Вы отключили режим ведущего. Теперь вы снова получаете информацию об аурах от других игроков при входе в игру или присоединении к группе.");
-	elseif not StatAurasSyncModule.isGM then
-		StatAurasSyncModule.isGM = not StatAurasSyncModule.isGM;
-		print("|cffBA6EE6[StatusAura]|r Вы включили режим ведущего. Теперь вы не будете получать информацию об аурах от других игроков при входе в игру или присоединении к группе.");
+		print(status_aura_prefix, "Вы отключили режим ведущего. Теперь вы снова получаете информацию об аурах от других игроков при входе в игру или присоединении к группе.");
+	else
+		print(status_aura_prefix, "Вы включили режим ведущего. Теперь вы не будете получать информацию об аурах от других игроков при входе в игру или присоединении к группе.");
 	end
+
+	StatAurasSyncModule.isGM = not StatAurasSyncModule.isGM;
+end
+
+SLASH_SAModeSwitch1 = "/SAModeSwitch" or "/samodeswitch" or "/SAMODESWITCH" or "/saModeSwitch";
+SlashCmdList.SAModeSwitch = function()
+	if StatAurasSyncModule.whitelistMode then
+		print(status_aura_prefix, "|cff6339C3Вы переключились на режим |cff606060чёрного списка|r.|r Теперь вы получаете информацию об аурах от всех игроков, не находящихся в чёрном списке.");
+	else
+		AutoWhitelistPriorities();
+		print(status_aura_prefix, "|cff6339C3Вы переключились на режим |cffFFFFFFбелого списка|r.|r Теперь вы получаете информацию об аурах только от игроков, находящихся в белом списке.");
+	end
+
+	StatAurasSyncModule.whitelistMode = not StatAurasSyncModule.whitelistMode;
+end
+
+SLASH_SAAWLToggle1 = "/SAAWLToggle" or "/saawltoggle" or "/SAAWLTOGGLE" or "/saawlToggle" or "/SAawlToggle" or "/saAWLToggle" or "/saAWLtoggle";
+SlashCmdList.SAAWLToggle = function()
+	if StatAurasSyncModule.autoWhitelist then
+		print(status_aura_prefix, "Вы отключили автоматическое добавление персонажей в |cffFFFFFFбелый|r список.");
+	else
+		print(status_aura_prefix, "Вы включили автоматическое добавление персонажей в |cffFFFFFFбелый|r список.");
+	end
+
+	StatAurasSyncModule.autoWhitelist = not StatAurasSyncModule.autoWhitelist;
 end
 
 SLASH_SACustomSender1 = "/SASetSender" or "/sasetsender" or "/SASETSENDER" or "/saSetSender";
 SlashCmdList.SACustomSender = function()
 	if UnitName("TARGET") == nil and StatAurasSyncModule.customSender == nil then
-		print("|cffBA6EE6[StatusAura]|r |cffC61E1EУ вас нет цели!|r");
+		print(status_aura_prefix, "|cffC61E1EУ вас нет цели!|r");
 		return 1;
 	elseif UnitName("TARGET") == nil then
-		print("|cffBA6EE6[StatusAura]|r Вы перестали запрашивать ауры у персонажа|cffC61E1E", StatAurasSyncModule.customSender);
+		print(status_aura_prefix, "Вы перестали запрашивать ауры у персонажа|cffC61E1E", StatAurasSyncModule.customSender);
 		StatAurasSyncModule.customSender = nil;
 		AurasSenderSearch();
 		return 0;
 	end
 
 	StatAurasSyncModule.customSender = UnitName("TARGET");
+	AutoWhitelistSender(StatAurasSyncModule.customSender);
 	if inGroup then
 		if StatAurasSyncModule.customSender ~= nil then
-			Auras_senders[2] = StatAurasSyncModule.customSender;
+			StatAurasSyncModule.auraSenders[2] = StatAurasSyncModule.customSender;
 		else
-			table.insert(Auras_senders, 2, StatAurasSyncModule.customSender);
+			table.insert(StatAurasSyncModule.auraSenders, 2, StatAurasSyncModule.customSender);
 		end
 	else
-		Auras_senders[1] = StatAurasSyncModule.customSender;
+		StatAurasSyncModule.auraSenders[1] = StatAurasSyncModule.customSender;
 	end
-	print("|cffBA6EE6[StatusAura]|r Вы успешно установили персонажа|cffC61E1E", StatAurasSyncModule.customSender, "|rкак источник новых аур.");
+	print(status_aura_prefix, "Вы успешно установили персонажа|cffC61E1E", StatAurasSyncModule.customSender, "|rкак источник новых аур.");
 	AurasSenderSet();
 end
 
 SLASH_SABlockSender1 = "/SABlockSender" or "/sablocksender" or "/SABLOCKSENDER" or "/saBlockSender";
 SlashCmdList.SABlockSender = function()
-	local PlayerToBlock = UnitName("TARGET");
+	local PlayerToAdd = UnitName("TARGET");
 
-	if PlayerToBlock == nil then
-		print("|cffBA6EE6[StatusAura]|r |cffC61E1EУ вас нет цели!|r");
+	if PlayerToAdd == nil then
+		print(status_aura_prefix, "|cffC61E1EУ вас нет цели!|r");
 		return 1;
 	end
-
-	for index, name in ipairs(StatAurasSyncModule.blockedSenders) do
-		if PlayerToBlock == name then
-			table.remove(StatAurasSyncModule.blockedSenders, index);
-			print("|cffBA6EE6[StatusAura]|r Вы вернули персонажу|cffC61E1E", PlayerToBlock, "|rвозможность отправлять вам ауры.");
-			return 0;
-		end
-	end
-
-	table.insert(StatAurasSyncModule.blockedSenders, PlayerToBlock);
-	print("|cffBA6EE6[StatusAura]|r Вы успешно заблокировали получение аур от персонажа|cffC61E1E", PlayerToBlock, "|r");
+	ListPlayerAdd(StatAurasSyncModule.blockedSenders, PlayerToAdd);
 end
 
-SLASH_SAGetCustomSender1 = "/SAGetCustomSender" or "/sagetcustomsender" or "/SAGETCUSTOMSENDER" or "/saGetCustomSender";
-SlashCmdList.SAGetCustomSender = function()
-	if StatAurasSyncModule.customSender then
-		print("|cffBA6EE6[StatusAura]|r Ваш пользовательский источник аур — персонаж|cffC61E1E", StatAurasSyncModule.customSender, "|r");
-	else
-		print("|cffBA6EE6[StatusAura]|r У вас нет пользовательского источника аур.");
+SLASH_SAWLSender1 = "/SAWhitelistSender" or "/saWhitelistSender" or "/SAWhitelistSender" or "/saoWhitelistSender" or "/saWhitelistSender" or "/SAWhitelistSender";
+SlashCmdList.SAWLSender = function()
+	local PlayerToAdd = UnitName("TARGET");
+
+	if PlayerToAdd == nil then
+		print(status_aura_prefix, "|cffC61E1EУ вас нет цели!|r");
+		return 1;
 	end
+	ListPlayerAdd(StatAurasSyncModule.whitelistedSenders, PlayerToAdd);
 end
 
 SLASH_SAGetSender1 = "/SAGetSender" or "/sagetsender" or "/SAGETSENDER" or "/saGetSender";
 SlashCmdList.SAGetSender = function()
 	if activeSender then
-		print("|cffBA6EE6[StatusAura]|r При входе в игру вы получаете ауры от персонажа|cffC61E1E", activeSender, "|r");
+		print(status_aura_prefix, "При входе в игру вы получаете ауры от персонажа|cffC61E1E", activeSender, "|r");
 	else
-		print("|cffBA6EE6[StatusAura]|r Вы не получаете ни от кого ауры при входе в игру.");
+		print(status_aura_prefix, "При входе в игру вы не получаете ауры ни от кого.");
+	end
+end
+
+SLASH_SAGetPriority1 = "/SAGetPriority" or "/sagetpriority" or "/SAGETPRIORITY" or "/saGetPriority";
+SlashCmdList.SAGetPriority = function()
+	if #StatAurasSyncModule.auraSenders ~= 0 then
+		print(status_aura_prefix, "|cff9CE1E6Приоритет отправителей аур:|r");
+		for priority_num, sender in ipairs(StatAurasSyncModule.auraSenders) do
+			print(priority_num .. ")|cffC61E1E", sender, "|r");
+		end
+	else
+		print(status_aura_prefix, "При входе в игру вы не получаете ауры ни от кого.");
+	end
+end
+
+SLASH_SAGetCustomSender1 = "/SAGetCustomSender" or "/sagetcustomsender" or "/SAGETCUSTOMSENDER" or "/saGetCustomSender";
+SlashCmdList.SAGetCustomSender = function()
+	if StatAurasSyncModule.customSender then
+		print(status_aura_prefix, "Ваш пользовательский источник аур — персонаж|cffC61E1E", StatAurasSyncModule.customSender, "|r");
+	else
+		print(status_aura_prefix, "У вас нет пользовательского источника аур.");
 	end
 end
 
 SLASH_SAGetBlockedSenders1 = "/SAGetBlockedSenders" or "/sagetblockedsenders" or "/SAGETBLOCKEDSENDERS" or "/saGetBlockedSenders";
 SlashCmdList.SAGetBlockedSenders = function()
-	if #StatAurasSyncModule.blockedSenders == 0 then
-		print("|cffBA6EE6[StatusAura]|r Ваш список заблокированных отправителей пуст.  |cffC61E1EДобавьте в него кого-нибудь! :)|r");
-		return 0;
-	end
+	ListPlayersGet(StatAurasSyncModule.blockedSenders)
+end
 
-	print("|cffBA6EE6[StatusAura]|r |cff9CE1E6Список заблокированных вами отправителей:|r");
-	for index, name in ipairs(StatAurasSyncModule.blockedSenders) do
-		print("|cffBA6EE6[StatusAura]|r |cff9CE1E6—|r|cffC61E1E", name, "|r");
-	end
+SLASH_SAGetWhitelistedSenders1 = "/SAGetWhitelistedSenders" or "/sagetwhitelistedsenders" or "/SAGETWHITELISTEDSENDERS" or "/saGetWhitelistedSenders" or "/SAGetWhiteListedSenders" or "/saGetWhiteListedSenders";
+SlashCmdList.SAGetWhitelistedSenders = function()
+	ListPlayersGet(StatAurasSyncModule.whitelistedSenders)
+end
+
+SLASH_SAClearBlacklist1 = "/SAClearBlacklist" or "/saclearblacklist" or "/SACLEARBLACKLIST" or "/saClearBlacklist" or "/SAClearBlacklist" or "/saClearBlacklist";
+SlashCmdList.SAClearBlacklist = function()
+	ListClear(StatAurasSyncModule.blockedSenders);
+end
+
+SLASH_SAClearWhitelist1 = "/SAClearWhitelist" or "/saclearwhitelist" or "/SACLEARWHITELIST" or "/saClearWhitelist" or "/SAClearWhitelist" or "/saClearWhitelist";
+SlashCmdList.SAClearWhitelist = function()
+	ListClear(StatAurasSyncModule.whitelistedSenders);
 end
 ---------------------------------------------------
 -- Функции
@@ -218,12 +350,6 @@ end
 
 function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 	if ( prefix == "SA_CharOnEnterQ" ) then
-		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do	--> Проверка, не заблокирован ли отправляющий
-			if sender == name then
-				return 1;
-			end
-		end
-
 		local SoR = LibParse:JSONEncode(StatAurasDatabase);			-->	SoR = Send or Receive
 		SoR = LibDeflate:CompressDeflate(SoR);
 		SoR = LibDeflate:EncodeForWoWAddonChannel(SoR);
@@ -231,6 +357,24 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 		AceComm:SendCommMessage("SA_CharOnEnterR", SoR, "WHISPER", sender, "BULK");
 	--=====================================================================================--
 	elseif ( prefix == "SA_CharOnEnterR" ) then
+		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do			--> Проверка, не заблокирован ли отправляющий
+			if sender == name then
+				return 2;
+			end
+		end
+		if StatAurasSyncModule.whitelistMode then
+			local Char_is_Whitelisted = false;
+			for index, name in ipairs(StatAurasSyncModule.whitelistedSenders) do	--> Проверка, в вайтлисте ли отправляющий
+				if sender == name then
+					Char_is_Whitelisted = true;
+					break;
+				end
+			end
+			if not Char_is_Whitelisted then
+				return 1;
+			end
+		end
+
 		local SoR = LibDeflate:DecodeForWoWAddonChannel(message);	-->	SoR = Send or Receive
 		SoR = LibDeflate:DecompressDeflate(SoR);
 		SoR = LibParse:JSONDecode(SoR);
@@ -240,12 +384,25 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 		StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor);
 	--=====================================================================================--
 	elseif ( prefix == "SA_SendOnSetQ" ) and ( sender ~= UnitName("PLAYER") ) then
-		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do	--> Проверка, не заблокирован ли отправляющий
+		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do			--> Проверка, не заблокирован ли отправляющий
 			if sender == name then
+				return 2;
+			end
+		end
+		if StatAurasSyncModule.whitelistMode then
+			local Char_is_Whitelisted = false;
+			for index, name in ipairs(StatAurasSyncModule.whitelistedSenders) do	--> Проверка, в вайтлисте ли отправляющий
+				if sender == name then
+					Char_is_Whitelisted = true;
+					break;
+				end
+			end
+			if not Char_is_Whitelisted then
 				return 1;
 			end
 		end
 
+		
 		local SoR = LibDeflate:DecodeForWoWAddonChannel(message);	-->	SoR = Send or Receive
 		SoR = LibDeflate:DecompressDeflate(SoR);
 		SoR = LibParse:JSONDecode(SoR);
@@ -258,6 +415,7 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 			StatAurasDatabase.NPCAuras[guid] = SoR[3];
 		end
 
+		print("NotAllCool (WhitelistCheck) " .. sender);			--> Отправляет данные о том, что кто-то сменил кому-то ауру.
 		StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor);
 		StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor);
 	end
