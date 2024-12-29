@@ -1,16 +1,18 @@
 ---------------------------------------------------
 -- SA_Sync_GetLibs
 ---------------------------------------------------
-local LibDeflate, LibParse, AceComm
+local LibDeflate, LibParse, AceComm, SomeBodysUtils;
 
 if LibStub then
-	LibDeflate = LibStub:GetLibrary("LibDeflate")
-	LibParse = LibStub:GetLibrary("LibParse")
-	AceComm = LibStub("AceComm-3.0")
+	LibDeflate = LibStub:GetLibrary("LibDeflate");
+	LibParse = LibStub:GetLibrary("LibParse");
+	AceComm = LibStub("AceComm-3.0");
+	SomeBodysUtils = LibStub:GetLibrary("SomeBodysUtils");
 else
-	LibDeflate = require("LibDeflate")
-	LibParse = require("LibParse")
-	AceComm = require("AceComm-3.0")
+	LibDeflate = require("LibDeflate");
+	LibParse = require("LibParse");
+	AceComm = require("AceComm-3.0");
+	SomeBodysUtils = require("SomeBodysUtils");
 end
 ---------------------------------------------------
 -- Объявление переменных
@@ -36,18 +38,9 @@ local function AutoWhitelistSender(PlayerToAdd)
 	if not StatAurasSyncModule.whitelistMode or not StatAurasSyncModule.autoWhitelist then
 		return;
 	end
-	--	---	В 1.6 знаменить проверку на [[ not setContains(PlayerToAdd) ]]	---
-	local isWhiteListed = false;
 
-	for _, name in ipairs(StatAurasSyncModule.whitelistedSenders) do
-		if name == PlayerToAdd then 
-			isWhiteListed = true;
-			break;
-		end
-	end
-	--	^^^	В 1.6 знаменить проверку на [[ not setContains(PlayerToAdd) ]]	^^^
-	if not isWhiteListed then
-		table.insert(StatAurasSyncModule.whitelistedSenders, PlayerToAdd);
+	if not SomeBodysUtils:tableContains(StatAurasSyncModule.whitelistedSenders, PlayerToAdd) then
+		SomeBodysUtils:addToSetTable(StatAurasSyncModule.whitelistedSenders, PlayerToAdd);
 	end
 end
 
@@ -118,8 +111,13 @@ local function AurasSenderSearch()
 end
 
 local function ListPlayerAdd(listTable, PlayerToAdd)
-	local remove_msg;
-	local add_msg;
+	local remove_msg, add_msg, guid;
+	guid = UnitGUID("target");
+	if not (GetPlayerInfoByGUID(guid)) then
+		print(status_aura_prefix .. " |cffC61E1EВаша цель не является игроком!|r");
+		return 1;
+	end
+
 	if listTable == StatAurasSyncModule.blockedSenders then
 		remove_msg = status_aura_prefix .. " Вы вернули персонажу|cffC61E1E " .. PlayerToAdd .. "|r возможность отправлять вам ауры.";
 		add_msg = status_aura_prefix .. " Вы успешно заблокировали получение аур от персонажа|cffC61E1E " .. PlayerToAdd .. "|r";
@@ -128,15 +126,13 @@ local function ListPlayerAdd(listTable, PlayerToAdd)
 		add_msg = status_aura_prefix .. " Вы успешно добавили персонажа|cffC61E1E " .. PlayerToAdd .. "|r в белый список.";
 	end
 
-	for index, name in ipairs(listTable) do
-		if PlayerToAdd == name then
-			table.remove(listTable, index);
-			print(remove_msg);
-			return 0;
-		end
+	if SomeBodysUtils:tableContains(listTable, PlayerToAdd) then
+		SomeBodysUtils:removeFromSetTable(listTable, PlayerToAdd);
+		print(remove_msg);
+		return 0;
 	end
 
-	table.insert(listTable, PlayerToAdd);
+	SomeBodysUtils:addToSetTable(listTable, PlayerToAdd);
 	print(add_msg);
 end
 
@@ -151,13 +147,13 @@ local function ListPlayersGet(listTable)
 		notempty_msg = status_aura_prefix .. " |cff9CE1E6Белый список отправителей:|r";
 	end
 
-	if #listTable == 0 then
+	if SomeBodysUtils:tableIsEmpty(listTable) then
 		print(empty_msg);
 		return 0;
 	end
 
 	print(notempty_msg);
-	for index, name in ipairs(listTable) do
+	for name, _ in pairs(listTable) do
 		print(status_aura_prefix, "|cff9CE1E6—|r|cffC61E1E", name, "|r");
 	end
 end
@@ -357,20 +353,11 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 		AceComm:SendCommMessage("SA_CharOnEnterR", SoR, "WHISPER", sender, "BULK");
 	--=====================================================================================--
 	elseif ( prefix == "SA_CharOnEnterR" ) then
-		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do			--> Проверка, не заблокирован ли отправляющий
-			if sender == name then
-				return 2;
-			end
+		if SomeBodysUtils:tableContains(StatAurasSyncModule.blockedSenders, sender) then				--> Проверка, не заблокирован ли отправляющий
+			return 2;
 		end
 		if StatAurasSyncModule.whitelistMode then
-			local Char_is_Whitelisted = false;
-			for index, name in ipairs(StatAurasSyncModule.whitelistedSenders) do	--> Проверка, в вайтлисте ли отправляющий
-				if sender == name then
-					Char_is_Whitelisted = true;
-					break;
-				end
-			end
-			if not Char_is_Whitelisted then
+			if not SomeBodysUtils:tableContains(StatAurasSyncModule.whitelistedSenders, sender) then	--> Проверка, в вайтлисте ли отправляющий
 				return 1;
 			end
 		end
@@ -384,20 +371,11 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 		StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor);
 	--=====================================================================================--
 	elseif ( prefix == "SA_SendOnSetQ" ) and ( sender ~= UnitName("PLAYER") ) then
-		for index, name in ipairs(StatAurasSyncModule.blockedSenders) do			--> Проверка, не заблокирован ли отправляющий
-			if sender == name then
-				return 2;
-			end
+		if SomeBodysUtils:tableContains(StatAurasSyncModule.blockedSenders, sender) then				--> Проверка, не заблокирован ли отправляющий
+			return 2;
 		end
 		if StatAurasSyncModule.whitelistMode then
-			local Char_is_Whitelisted = false;
-			for index, name in ipairs(StatAurasSyncModule.whitelistedSenders) do	--> Проверка, в вайтлисте ли отправляющий
-				if sender == name then
-					Char_is_Whitelisted = true;
-					break;
-				end
-			end
-			if not Char_is_Whitelisted then
+			if not SomeBodysUtils:tableContains(StatAurasSyncModule.whitelistedSenders, sender) then	--> Проверка, в вайтлисте ли отправляющий
 				return 1;
 			end
 		end

@@ -1,5 +1,15 @@
 ---------------------------------------------------
--- SAGM_Namespaces
+-- SA_Sync_GetLibs
+---------------------------------------------------
+local SomeBodysUtils;
+
+if LibStub then
+	SomeBodysUtils = LibStub:GetLibrary("SomeBodysUtils");
+else
+	SomeBodysUtils = require("SomeBodysUtils");
+end
+---------------------------------------------------
+-- SA_Variables
 ---------------------------------------------------
 StatAuras = {};
 StatAuras.Vars = {};
@@ -68,22 +78,6 @@ SlashCmdList.SAHELP = function()
 	end
 end
 ---------------------------------------------------
--- Локальные функции
----------------------------------------------------
-local function removebykey(table, key)
-    local element = table[key]
-    table[key] = nil
-    return element
-end
-
-local function AuraTableCopy(table)
-	local table2 = {};
-	for i, n in pairs(table) do
-	  table2[i] = n
-	end
-	return table2
-end
----------------------------------------------------
 -- Функции
 ---------------------------------------------------
 StatAuras.Vars.CurAuraNum_Std = 0;
@@ -117,7 +111,7 @@ end
 function StatAuras.Funcs.DeleteAura(guid, auranum, db)
 	table.remove(db[guid], auranum);
 	if #db[guid] == 0 then
-		removebykey(db, guid)
+		SomeBodysUtils:removebykey(db, guid)
 	end
 	return db;
 end
@@ -145,7 +139,7 @@ end
 function StatAuras.Funcs.SetAura(aura, guid, stacks, db)
 	local OwnerName = UnitName("player");
 	local temp_aura_table = {};
-	temp_aura_table = AuraTableCopy(aura);
+	temp_aura_table = SomeBodysUtils:AuraTableCopy(aura);
 	stacks = tonumber(stacks);
 	temp_aura_table[7] = stacks;
 	stacks = StatAuras.Funcs.UnstackableCheck(temp_aura_table, stacks, "set");
@@ -183,7 +177,7 @@ function StatAuras.Funcs.ChangeAuraStacks(aura, guid, stacks, db, math_symbol)
 	local OwnerName = UnitName("player");
 	local temp_aura_table = {};
 	stacks = tonumber(stacks) * math_symbol;
-	temp_aura_table = AuraTableCopy(aura);
+	temp_aura_table = SomeBodysUtils:AuraTableCopy(aura);
 	temp_aura_table[7] = stacks;
 
 	for db_guid, guid_auras in pairs(db) do
@@ -380,7 +374,7 @@ function StatAuras.Funcs.DisplayAurasUpdate(unitID, AurasAnchor)
 	return 0;
 end
 
-function StatAuras.Funcs.DisplayAuraCrementByOne(auranum, button, unitID)	-- auranum - указатель на положение ауры в таблице аур цели
+function StatAuras.Funcs.DisplayAuraCrementByOne(auranum, button, unitID)	-- auranum - индекс ауры в таблице аур цели
 	local guid = UnitGUID(unitID);											-- Если ничего не изменено и не сломано, то оно всегда
 	local db;																-- соответствует порядочному номеру иконки ауры.
 	if (GetPlayerInfoByGUID(guid)) then
@@ -427,6 +421,6 @@ function StatAuras.Funcs.AurasPoolSearch(auraID)
 			return aura_index;
 		end
 	end
-	return false;
+	return nil;
 end
 ---------------------------------------------------
