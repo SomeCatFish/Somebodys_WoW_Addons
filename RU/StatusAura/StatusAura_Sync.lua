@@ -393,7 +393,6 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 			StatAurasDatabase.NPCAuras[guid] = SoR[3];
 		end
 
-		print("NotAllCool (WhitelistCheck) " .. sender);			--> Отправляет данные о том, что кто-то сменил кому-то ауру.
 		StatAuras.Funcs.DisplayAurasUpdate("player", SA_PlayerAurasAnchor);
 		StatAuras.Funcs.DisplayAurasUpdate("target", SA_TargetAurasAnchor);
 	end
@@ -438,7 +437,7 @@ local function eventHandler(self, event, arg1, ...)
 	--				+ запрос на ауры при присоединении к рейду
 	--======================================================================
 	elseif ( event == "GROUP_ROSTER_UPDATE" ) then
-		if ( curMembersNumber == nil or 0 ) and ( curMembersNumber ~= GetNumGroupMembers() ) then	-- Присоединение к рейду
+		if ( curMembersNumber == nil or curMembersNumber == 0 ) and ( curMembersNumber ~= GetNumGroupMembers() ) then	-- Присоединение к рейду
 			curMembersNumber = GetNumGroupMembers();
 			AurasSenderSearch();
 			if not StatAurasSyncModule.isGM and not UnitIsGroupLeader("PLAYER") then

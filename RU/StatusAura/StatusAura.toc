@@ -1,9 +1,9 @@
 ## Title: |cffFFB266StatusAura|r
-## Version: 1.7
+## Version: 1.8
 ## Author: SomeBody
 ## Interface: 90207
 ## Notes: Позволяет навешивать на игроков кастомные статусы.|n|n|cff990099Created by roleplayers for roleplayers.|r
-## SavedVariables: StatAurasDatabase, StatAurasSyncModule
+## SavedVariables: StatAurasDatabase, StatAurasSyncModule, StatusAuraVersion
 
 libs\LibStub.lua
 libs\LibDeflate.lua
@@ -16,5 +16,6 @@ StatusAura.xml
 Target_StatAuras.xml
 Player_StatAuras.xml
 
+StatusAura_DataGuard.lua
 StatusAura.lua
 StatusAura_Sync.lua
