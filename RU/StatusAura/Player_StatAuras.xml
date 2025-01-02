@@ -48,7 +48,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(1, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -98,7 +98,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(2, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -148,7 +148,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(3, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -198,7 +198,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(4, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -248,7 +248,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(5, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -298,7 +298,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(6, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -348,7 +348,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(7, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -398,7 +398,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(8, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -448,7 +448,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(9, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -498,7 +498,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(10, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -548,7 +548,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(11, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -598,7 +598,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(12, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -648,7 +648,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(13, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -698,7 +698,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(14, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end
@@ -748,7 +748,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(15, button, "player")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "player")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("ply")
 						end

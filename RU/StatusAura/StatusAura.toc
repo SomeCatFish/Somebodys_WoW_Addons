@@ -1,5 +1,5 @@
 ## Title: |cffFFB266StatusAura|r
-## Version: 1.6
+## Version: 1.7
 ## Author: SomeBody
 ## Interface: 90207
 ## Notes: Позволяет навешивать на игроков кастомные статусы.|n|n|cff990099Created by roleplayers for roleplayers.|r

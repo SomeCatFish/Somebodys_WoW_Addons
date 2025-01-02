@@ -11,12 +11,6 @@ if not SomeBodysUtils then
 	return;
 end
 
-function SomeBodysUtils:removebykey(table, key)
-    local element = table[key];
-    table[key] = nil;
-    return element;
-end
-
 function SomeBodysUtils:AuraTableCopy(table)
 	local table2 = {};
 	for i, n in pairs(table) do
@@ -29,7 +23,7 @@ function SomeBodysUtils:addToSetTable(setTable, key)
     setTable[key] = true;
 end
 
-function SomeBodysUtils:removeFromSetTable(setTable, key)	-- Basically the same as removebykey() BUT left separate for clarity.
+function SomeBodysUtils:removeFromSetTable(setTable, key)
     setTable[key] = nil;
 end
 
@@ -37,7 +31,14 @@ function SomeBodysUtils:tableContains(setTable, key)
     return setTable[key] ~= nil;
 end
 
+function SomeBodysUtils:sizeOfSetTable(setTable)
+    local n = 0;
+    for _, _ in pairs(setTable) do
+        n = n + 1;
+    end
+    return n;
+end
+
 function SomeBodysUtils:tableIsEmpty(setTable)
     return next(setTable) == nil;
 end
--- print(SomeBodysUtils:tableContains(StatAurasDatabase, "AurasPool"));

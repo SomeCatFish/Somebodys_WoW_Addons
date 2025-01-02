@@ -101,7 +101,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								StatAuras.Funcs.StdAuraType(1)
+								StatAuras.Funcs.StdAuraType("1")
 								StatAuras.Funcs.typeRadio(self)
 							</OnClick>
 						</Scripts>
@@ -109,7 +109,7 @@
 				</Frames>
 				<Scripts>
 					<OnClick>
-						StatAuras.Funcs.StdAuraType(1)
+						StatAuras.Funcs.StdAuraType("1")
 						StatAuras.Funcs.typeRadio(HP_Radio)
 					</OnClick>
 				</Scripts>
@@ -128,7 +128,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								StatAuras.Funcs.StdAuraType(2)
+								StatAuras.Funcs.StdAuraType("2")
 								StatAuras.Funcs.typeRadio(self)
 							</OnClick>
 						</Scripts>
@@ -136,7 +136,7 @@
 				</Frames>
 				<Scripts>
 					<OnClick>
-						StatAuras.Funcs.StdAuraType(2)
+						StatAuras.Funcs.StdAuraType("2")
 						StatAuras.Funcs.typeRadio(MP_Radio)
 					</OnClick>
 				</Scripts>
@@ -155,7 +155,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								StatAuras.Funcs.StdAuraType(3)
+								StatAuras.Funcs.StdAuraType("3")
 								StatAuras.Funcs.typeRadio(self)
 							</OnClick>
 						</Scripts>
@@ -163,7 +163,7 @@
 				</Frames>
 				<Scripts>
 					<OnClick>
-						StatAuras.Funcs.StdAuraType(3)
+						StatAuras.Funcs.StdAuraType("3")
 						StatAuras.Funcs.typeRadio(AR_Radio)
 					</OnClick>
 				</Scripts>
@@ -182,7 +182,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								StatAuras.Funcs.StdAuraType(4)
+								StatAuras.Funcs.StdAuraType("4")
 								StatAuras.Funcs.typeRadio(self)
 							</OnClick>
 						</Scripts>
@@ -190,7 +190,7 @@
 				</Frames>
 				<Scripts>
 					<OnClick>
-						StatAuras.Funcs.StdAuraType(4)
+						StatAuras.Funcs.StdAuraType("4")
 						StatAuras.Funcs.typeRadio(BAR_Radio)
 					</OnClick>
 				</Scripts>
@@ -209,7 +209,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								StatAuras.Funcs.StdAuraType(5)
+								StatAuras.Funcs.StdAuraType("5")
 								StatAuras.Funcs.typeRadio(ATK_Radio)
 							</OnClick>
 						</Scripts>
@@ -217,7 +217,7 @@
 				</Frames>
 				<Scripts>
 					<OnClick>
-						StatAuras.Funcs.StdAuraType(5)
+						StatAuras.Funcs.StdAuraType("5")
 						StatAuras.Funcs.typeRadio(ATK_Radio)
 					</OnClick>
 				</Scripts>

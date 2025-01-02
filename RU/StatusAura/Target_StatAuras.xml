@@ -48,7 +48,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(1, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -98,7 +98,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(2, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -148,7 +148,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(3, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -198,7 +198,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(4, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -248,7 +248,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(5, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -298,7 +298,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(6, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -348,7 +348,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(7, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -398,7 +398,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(8, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -448,7 +448,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(9, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -498,7 +498,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(10, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -548,7 +548,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(11, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -598,7 +598,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(12, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -648,7 +648,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(13, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -698,7 +698,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(14, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
@@ -748,7 +748,7 @@
 				</Frames>
 				<Scripts>
 					<OnMouseDown>
-						StatAuras.Funcs.DisplayAuraCrementByOne(15, button, "target")
+						StatAuras.Funcs.DisplayAuraCrementByOne(self, button, "target")
 						if StatAurasSyncModule then
 						StatAuras.Funcs.SendAurasOnSet("trg")
 						end
