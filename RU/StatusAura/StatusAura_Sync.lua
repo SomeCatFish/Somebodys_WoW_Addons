@@ -379,7 +379,6 @@ function StatAuras.Funcs.QueryHandler(prefix, message, distribution, sender)
 				return 1;
 			end
 		end
-
 		
 		local SoR = LibDeflate:DecodeForWoWAddonChannel(message);	-->	SoR = Send or Receive
 		SoR = LibDeflate:DecompressDeflate(SoR);
@@ -456,6 +455,9 @@ local function eventHandler(self, event, arg1, ...)
 	--======================================================================
 	elseif ( event == "PLAYER_ROLES_ASSIGNED" ) and ( curMembersNumber > 0 ) then
 		AurasSenderSearch();
+		if not StatAurasSyncModule.isGM and not UnitIsGroupLeader("PLAYER") then
+			StatAuras_Funcs.InfoQuery();
+		end
 	end
 end
 

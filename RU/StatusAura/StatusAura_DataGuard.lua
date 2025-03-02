@@ -11,25 +11,34 @@ end
 ---------------------------------------------------
 -- Variables and Functions
 ---------------------------------------------------
-local currentVersion = 180;
+local currentVersion = 185;
 local function UpToDate_Function()
-    if not StatusAuraVersion or StatusAuraVersion < currentVersion then
-        ----------------------------------------------------
-        local newPool = {};
-        for _, aura in pairs(StatAurasDatabase.AurasPool) do
-            local auraID = tostring(aura[1]);
-            newPool[auraID] = aura;
+    if StatusAuraVersion < currentVersion or not StatusAuraVersion then
+        --================== Version 1.8.0 ==================--
+        if StatusAuraVersion < 180 or not StatusAuraVersion then
+            local newPool = {};
+            for _, aura in pairs(StatAurasDatabase.AurasPool) do
+                local auraID = tostring(aura[1]);
+                newPool[auraID] = aura;
+            end
+            StatAurasDatabase.AurasPool = newPool;  -- Update AurasPool
+            StatAurasDatabase.NPCAuras = {};        -- Clear NPC auras from (most likely) garbage
+        
+            if StatAurasSyncModule then
+                StatAurasSyncModule.whitelistedSenders = {};
+                StatAurasSyncModule.autoWhitelist = true;
+                StatAurasSyncModule.whitelistMode = true;
+            end
         end
-        StatAurasDatabase.AurasPool = newPool;  -- Update AurasPool
-        StatAurasDatabase.NPCAuras = {};        -- Clear NPC auras from (most likely) garbage
-    
-        if StatAurasSyncModule then
-            StatAurasSyncModule.whitelistedSenders = {};
-            StatAurasSyncModule.autoWhitelist = true;
-            StatAurasSyncModule.whitelistMode = true;
-        end
-        ----------------------------------------------------
+        -------------------------------------------------------
+
+        --================== Version 1.9.0 ==================--
+        -- if StatusAuraVersion < 190 or not StatusAuraVersion then
+        --
+        -- end
+        -------------------------------------------------------
         StatusAuraVersion = currentVersion;
+
     end
 end
 
